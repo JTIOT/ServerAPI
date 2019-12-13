@@ -3,7 +3,7 @@ const sql = require('mssql');
 const pool = new sql.ConnectionPool({
     user: 'sa',
     password: 'jit23236229',
-    server: 'localhost',
+    server: '192.168.5.185',
     database: 'master'
 });
 
