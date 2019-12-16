@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const { JSend } = require('jsend-express')
 const {ExceptionHandler} = require('./exceptionHandler/exceptionHandler');
 const asyncHandler = require('express-async-handler');
-const {dbConnHandler} = require('./database/database');
 
 const testRoute = require('./routes/testRoute');
 const userRoute = require('./routes/userRoute');
@@ -22,8 +21,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //use body parser json
 app.use(bodyParser.json());
 
-//use database connection checking handler
-app.use(asyncHandler(dbConnHandler));
 
 //main route
 app.get('/', asyncHandler(async (req, res)=>{
