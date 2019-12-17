@@ -4,8 +4,10 @@ const {
     userExist,
     deviceInStore
 } = require('../database/queryUtil/queryUtil');
+
 const {cusomterInfoSchema} = require('../database/schema/initSchema');
 const {FailMetaData} = require('../exceptionHandler/exceptionHandler');
+
 const {
     USER_EXIST_FAIL,
     USER_NAME_REQUIRED,
@@ -13,9 +15,12 @@ const {
     INVALID_MAC,
     DEVICE_NOT_IN_STORE
 } = require('../exceptionHandler/registerFails/registerFailTypes');
+
 const moment = require('moment');
 const uniqid = require('uniqid');
 const bcrypt = require('bcrypt');
+
+const {generateAPIKey} = require('../Utils/apiKeyGenerator');
 
 /**
  * setup initial schema
@@ -61,7 +66,7 @@ const isValidMac = (mac) => {
  * @param {*} next 
  */
 const register = async (req, res, next) => {
-
+    
     const {userName, password, mac} = req.body;
 
     //user name is empty
@@ -110,8 +115,17 @@ const register = async (req, res, next) => {
         //insert user data into DB
         await queryHandler(registerUser, registerSchema, mac);
 
+        //generate api key
+        const apiKey = await generateAPIKey({
+            userId: registerSchema.balAccount,
+            userName: registerSchema.homeTel
+        })
+
+        //response data
         const data = {
-            userId: registerSchema.balAccount
+            userId: registerSchema.balAccount,
+            userName: registerSchema.homeTel,
+            apiKey: apiKey
         };
         res.success({data});
     } 

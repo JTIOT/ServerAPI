@@ -1,3 +1,6 @@
+/**
+ * initial schema for DB
+ */
 const cusomterInfoSchema = {
     keyId: '',
     balAccount: '',

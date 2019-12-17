@@ -1,5 +1,8 @@
 const {createFailType} = require('../exceptionTypes');
 
+/**
+ * define list of register fail types
+ */
 const registerFailTypes = {
     USER_EXIST_FAIL: createFailType(1000, 'User name is already in use'),
     USER_NAME_REQUIRED: createFailType(1001, 'User name is required'),

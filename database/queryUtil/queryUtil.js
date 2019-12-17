@@ -23,10 +23,27 @@ const userExist = async (userName) =>{
 const registerUser = async (schema, mac) => {
 
     const trx = await knex.transaction();
+
+    //insert an user data
     await trx.insert(schema).into('BAL.dbo.CustomerInfo');
+
+    //binding user to device
     await trx.table('BAL.dbo.DeviceInfo').
     update({CustomerId: schema.insertYmd}).
     where({deviceMark:mac});
+
+    //check if device in bedplate2015
+    const result = await trx.select('*')
+    .from('Bedplate2015.dbo.ProductInfo')
+    .where({DeviceName: mac});
+
+    //no device in bedplate2015 insert a new one
+    //otherwise leave it be
+    if(result.length <= 0)
+    {
+        console.log('insert to bedplate');
+        await trx.insert({DeviceName:mac}).into('Bedplate2015.dbo.ProductInfo');
+    }
     await trx.commit();
     // await knex.insert(schema).into('BAL.dbo.CustomerInfo');
     // return true;

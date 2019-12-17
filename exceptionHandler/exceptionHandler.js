@@ -98,6 +98,9 @@ const failHandler = async (excp, req, res, next) => {
 module.exports = {
     ErrorMetaData,
     FailMetaData,
+    /**
+     * handle fail and error type of exception
+     */
     ExceptionHandler: [
         failHandler, 
         errorHandler
