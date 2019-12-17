@@ -12,6 +12,7 @@ const exceptionTypes = {
  */
 const createErrorType = (errMessage) => {
     return {
+        type:exceptionTypes.ERROR,
         message: errMessage
     }
 }
@@ -23,6 +24,7 @@ const createErrorType = (errMessage) => {
  */
 const createFailType = (failCode, failMessage) => {
     return {
+        type:exceptionTypes.FAIL,
         code: failCode,
         message: failMessage
     }

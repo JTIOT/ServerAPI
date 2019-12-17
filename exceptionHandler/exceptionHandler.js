@@ -95,7 +95,31 @@ const failHandler = async (excp, req, res, next) => {
     next(excp);
 }
 
+/**
+ * Throw an error exception
+ * @param {*} type an error type exception
+ */
+const throwError = (type) => {
+    if(type.type !== exceptionTypes.ERROR){
+        throw new Error(`throwError function received none error type exception ${type}`);
+    }
+    throw new ErrorMetaData(type);
+}
+
+/**
+ * Throw an fail exception
+ * @param {*} type an fail type exception
+ */
+const throwFail = (type) => {
+    if(type.type !== exceptionTypes.FAIL){
+        throw new Error(`throwFail function received none fail type exception ${type}`);
+    }
+    throw new FailMetaData(type);
+}
+
 module.exports = {
+    throwError,
+    throwFail,
     ErrorMetaData,
     FailMetaData,
     /**

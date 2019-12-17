@@ -6,7 +6,7 @@ const {
 } = require('../database/queryUtil/queryUtil');
 
 const {cusomterInfoSchema} = require('../database/schema/initSchema');
-const {FailMetaData} = require('../exceptionHandler/exceptionHandler');
+const {throwFail} = require('../exceptionHandler/exceptionHandler');
 
 const {
     USER_EXIST_FAIL,
@@ -66,22 +66,22 @@ const isValidMac = (mac) => {
  * @param {*} next 
  */
 const register = async (req, res, next) => {
-    
+
     const {userName, password, mac} = req.body;
 
     //user name is empty
     if(!userName){
-        throw new FailMetaData(USER_NAME_REQUIRED);
+        throwFail(USER_NAME_REQUIRED);
     }
 
     //password is empty
     if(!password){
-        throw new FailMetaData(PASSWORD_REQUIRED);
+        throwFail(PASSWORD_REQUIRED);
     }
 
     //is device mac valid?
     if(!isValidMac(mac)){
-        throw new FailMetaData(INVALID_MAC);
+        throwFail(INVALID_MAC);
     }
 
     //check if user name is used
@@ -89,7 +89,7 @@ const register = async (req, res, next) => {
 
     if(userInUsed){
         //user do exist in DB
-        throw new FailMetaData(USER_EXIST_FAIL);
+        throwFail(USER_EXIST_FAIL);
     }
 
     //check if device is in store
@@ -99,7 +99,7 @@ const register = async (req, res, next) => {
     //device not in store
     if(!devicePublished){
         //user do exist in DB
-        throw new FailMetaData(DEVICE_NOT_IN_STORE);
+        throwFail(DEVICE_NOT_IN_STORE);
     }
     else{
         //user does not exist in DB

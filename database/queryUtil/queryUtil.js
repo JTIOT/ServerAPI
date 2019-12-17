@@ -1,5 +1,5 @@
 const {knex} = require('../database');
-const {ErrorMetaData} = require('../../exceptionHandler/exceptionHandler');
+const {throwError} = require('../../exceptionHandler/exceptionHandler');
 const {DB_ERROR} = require('../../exceptionHandler/databaseErrors/databaseErrorTypes');
 
 /**
@@ -74,7 +74,7 @@ const queryHandler = async (fn, ...args)=>{
     }
     catch(err){
         console.log('DB error ', err);
-        throw new ErrorMetaData(DB_ERROR);
+        throwError(DB_ERROR);
     }
 }
 
