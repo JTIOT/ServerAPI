@@ -1,6 +1,8 @@
 const {
+    queryHandler,
     registerUser,
-    findUser
+    userExist,
+    deviceInStore
 } = require('../database/queryUtil/queryUtil');
 const {cusomterInfoSchema} = require('../database/schema/initSchema');
 const {FailMetaData} = require('../exceptionHandler/exceptionHandler');
@@ -8,12 +10,16 @@ const {
     USER_EXIST_FAIL,
     USER_NAME_REQUIRED,
     PASSWORD_REQUIRED,
-    INVALID_MAC
+    INVALID_MAC,
+    DEVICE_NOT_IN_STORE
 } = require('../exceptionHandler/registerFails/registerFailTypes');
 const moment = require('moment');
 const uniqid = require('uniqid');
 const bcrypt = require('bcrypt');
 
+/**
+ * setup initial schema
+ */
 const getInitialSchema = ()=>{
 
     const keyId = moment().format('YYYYMMDDhhmmssSSS');
@@ -35,6 +41,10 @@ const getInitialSchema = ()=>{
     return ret;
 }
 
+/**
+ * Check if device mac is valid
+ * @param {*} mac 
+ */
 const isValidMac = (mac) => {
 
     if(mac){
@@ -70,11 +80,21 @@ const register = async (req, res, next) => {
     }
 
     //check if user name is used
-    const userExist = await findUser(userName);
+    const userInUsed = await queryHandler(userExist, userName);
 
-    if(userExist){
+    if(userInUsed){
         //user do exist in DB
         throw new FailMetaData(USER_EXIST_FAIL);
+    }
+
+    //check if device is in store
+    const devicePublished = await queryHandler(deviceInStore, mac);
+
+
+    //device not in store
+    if(!devicePublished){
+        //user do exist in DB
+        throw new FailMetaData(DEVICE_NOT_IN_STORE);
     }
     else{
         //user does not exist in DB
@@ -88,7 +108,7 @@ const register = async (req, res, next) => {
         registerSchema.password = hashedPassword;
 
         //insert user data into DB
-        await registerUser(registerSchema);
+        await queryHandler(registerUser, registerSchema, mac);
 
         const data = {
             userId: registerSchema.balAccount
