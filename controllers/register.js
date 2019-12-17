@@ -1,7 +1,7 @@
 const {
     registerUser,
     findUser
-} = require('../database/queryHandler/queryHandler');
+} = require('../database/queryUtil/queryUtil');
 const {cusomterInfoSchema} = require('../database/schema/initSchema');
 const {FailMetaData} = require('../exceptionHandler/exceptionHandler');
 const {
@@ -44,8 +44,14 @@ const isValidMac = (mac) => {
     return false;
 }
 
+/**
+ * register user
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 const register = async (req, res, next) => {
-    //TODO: register user
+
     const {userName, password, mac} = req.body;
 
     //user name is empty
@@ -68,12 +74,10 @@ const register = async (req, res, next) => {
 
     if(userExist){
         //user do exist in DB
-        console.log('user exit');
         throw new FailMetaData(USER_EXIST_FAIL);
     }
     else{
         //user does not exist in DB
-        console.log('user not exist');
 
         //get initial schema
         const registerSchema = getInitialSchema();
@@ -84,8 +88,8 @@ const register = async (req, res, next) => {
         registerSchema.password = hashedPassword;
 
         //insert user data into DB
-        const result = await registerUser(registerSchema);
-        console.log(result);
+        await registerUser(registerSchema);
+
         const data = {
             userId: registerSchema.balAccount
         };

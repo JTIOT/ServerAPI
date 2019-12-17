@@ -21,14 +21,13 @@ const findUser = async (userName) =>{
  */
 const registerUser = async (schema) => {
 
-    knex.insert(schema).into('BAL.dbo.CustomerInfo')
-    .then(result =>{
+    try{
+        await knex.insert(schema).into('BAL.dbo.CustomerInfo');
         return true;
-    })
-    .catch(err=>{
-        console.log('DB ERROR', err);
+    }
+    catch(err){
         throw new ErrorMetaData(DB_ERROR);
-    });
+    }
 }
 
 module.exports = {
