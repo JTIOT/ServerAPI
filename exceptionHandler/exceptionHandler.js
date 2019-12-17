@@ -37,7 +37,7 @@ class ErrorMetaData extends ExceptionMetaData{
  * @return json object with error message
  */
 const errorHandler = async (excp, req, res, next) => {
-    
+
     if(excp.exceptionType === exceptionTypes.ERROR){
 
         return res.error({
@@ -80,7 +80,6 @@ class FailMetaData extends ExceptionMetaData{
  * @return json object with fail code and message
  */
 const failHandler = async (excp, req, res, next) => {
-
     if(excp.exceptionType === exceptionTypes.FAIL){
         
        return res.fail({
