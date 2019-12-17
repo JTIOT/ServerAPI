@@ -19,7 +19,6 @@
     "knex": "^0.20.4",
     "moment": "^2.24.0",
     "mssql": "^6.0.1",
-    "node-mssql": "0.0.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "uniqid": "^5.2.0"

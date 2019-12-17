@@ -46,8 +46,8 @@ const deviceInStore = async (mac)=>{
 }
 
 /**
- * Handle query and internal db error
- * @param {*} fn function that need to be handled
+ * Handle query's db error
+ * @param {*} fn query function that need to be handled
  * @param  {...any} args arguements to be passed into function
  */
 const queryHandler = async (fn, ...args)=>{
