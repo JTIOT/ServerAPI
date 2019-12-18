@@ -44,6 +44,34 @@ const registerUser = async (schema, mac) => {
         console.log('insert to bedplate');
         await trx.insert({DeviceName:mac}).into('Bedplate2015.dbo.ProductInfo');
     }
+
+    //convert mac to mac without :
+    const macStr = mac.split("").filter((c)=>{ 
+        return c != ":";
+    }).join("");
+
+    //check if device mac table is existed in db
+    const tableResult = await trx.select('TABLE_NAME')
+    .from('Bedplate2015.INFORMATION_SCHEMA.TABLES ')
+    .where({TABLE_NAME:macStr});
+
+    //create one if not exist
+    if(tableResult.length <= 0){
+        console.log(`table ${macStr} does not exist create one`, tableResult);
+
+        await trx.schema.withSchema('Bedplate2015.dbo').createTable(macStr, table=>{
+            table.increments('ID').primary().notNullable();
+            table.integer('HeartbeatRate').notNullable();
+            table.integer('BreathingRate').nullable();
+            table.integer('PressureValue').nullable();
+            table.integer('FileIndex').nullable();
+            table.integer('SleepActivity').nullable();
+            table.dateTime('TimeStamp').nullable();
+            table.dateTime('ReceiveTime').nullable();
+            table.integer('HBReliability').nullable();
+        })
+    }
+
     await trx.commit();
     // await knex.insert(schema).into('BAL.dbo.CustomerInfo');
     // return true;

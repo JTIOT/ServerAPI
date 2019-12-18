@@ -4,7 +4,7 @@ const dbConfig = {
     connection: {
       host : '192.168.5.185',
       user : 'sa',
-      password : 'jit23236229',
+      password : '62C50298',
       database : 'master'
     }
 }
