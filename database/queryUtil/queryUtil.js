@@ -57,7 +57,7 @@ const registerUser = async (schema, mac) => {
 
     //create one if not exist
     if(tableResult.length <= 0){
-        console.log(`table ${macStr} does not exist create one`, tableResult);
+        console.log(`table ${macStr} does not exist create one`);
 
         await trx.schema.withSchema('Bedplate2015.dbo').createTable(macStr, table=>{
             table.increments('ID').primary().notNullable();
