@@ -67,7 +67,7 @@ const isValidMac = (mac) => {
  */
 const register = async (req, res, next) => {
 
-    const {userName, password, mac} = req.body;
+    const {userName, password, mac, email} = req.body;
 
     //user name is empty
     if(!userName){
@@ -111,6 +111,7 @@ const register = async (req, res, next) => {
         registerSchema.homeTel = userName;
         const hashedPassword = await bcrypt.hash(password, 10);
         registerSchema.password = hashedPassword;
+        registerSchema.Email = email;
 
         //insert user data into DB
         await queryHandler(registerUser, registerSchema, mac);
