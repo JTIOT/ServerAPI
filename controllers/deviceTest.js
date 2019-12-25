@@ -1,6 +1,5 @@
 
 const {
-    queryHandler,
     deviceSample,
     deviceTableExist
 } = require('../database/queryUtil/queryUtil');
