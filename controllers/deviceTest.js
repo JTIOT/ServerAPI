@@ -35,7 +35,7 @@ const deviceTest = async (req, res, next) => {
 
     const {mac} = req.body;
 
-    const tableExist = await queryHandler(deviceTableExist, mac);
+    const tableExist = await deviceTableExist(mac);
 
     if(!tableExist){
         throwFail(DEVICE_NOT_EXIST);

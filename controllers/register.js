@@ -1,5 +1,4 @@
 const {
-    queryHandler,
     registerUser,
     userExist,
     deviceInStore
@@ -85,7 +84,8 @@ const register = async (req, res, next) => {
     }
 
     //check if user name is used
-    const userInUsed = await queryHandler(userExist, userName);
+    // const userInUsed = await queryHandler(userExist, userName);
+    const userInUsed = await userExist(userName);
 
     if(userInUsed){
         //user do exist in DB
@@ -93,7 +93,7 @@ const register = async (req, res, next) => {
     }
 
     //check if device is in store
-    const devicePublished = await queryHandler(deviceInStore, mac);
+    const devicePublished = await deviceInStore(mac);
 
 
     //device not in store
@@ -114,7 +114,7 @@ const register = async (req, res, next) => {
         registerSchema.Email = email;
 
         //insert user data into DB
-        await queryHandler(registerUser, registerSchema, mac);
+        await registerUser(registerSchema, mac);
 
         //generate api key
         const apiKey = await generateAPIKey({

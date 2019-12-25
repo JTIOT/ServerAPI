@@ -9,7 +9,7 @@ const testFailTypes = require('../exceptionHandler/testFails/testFailTypes');
 
 const asyncHandler = require('express-async-handler'); 
 
-const {apiKeyValidator} = require('../Utils/apiKeyValidator');
+const {apiKeyValidator} = require('../middlewares/apiKeyValidator');
 
 
 //test Error handling

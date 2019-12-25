@@ -3,7 +3,7 @@ const router = express.Router();
 
 const registerController = require('../controllers/register');
 const deviceTestController = require('../controllers/deviceTest');
-const apiKeyValidator = require('../Utils/apiKeyValidator');
+const apiKeyValidator = require('../middlewares/apiKeyValidator');
 
 const asyncHandler = require('express-async-handler'); 
 

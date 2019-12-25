@@ -26,11 +26,15 @@ const formatMac = (mac) => {
  */
 const userExist = async (userName) =>{
 
-    const result = await knex176.select('*')
-    .from('BAL.dbo.CustomerInfo')
-    .where({homeTel: userName});
+    const fn = async ()=>{
+        const result = await knex176.select('*')
+        .from('BAL.dbo.CustomerInfo')
+        .where({homeTel: userName});
 
-    return result.length > 0? true : false;
+        return result.length > 0? true : false;
+    }
+    
+    return queryHandler(fn);
 }
 
 /**
@@ -39,14 +43,19 @@ const userExist = async (userName) =>{
  */
 const deviceTableExist = async (mac) =>{
 
-    //convert mac to mac without ':'
-    const macStr = formatMac(mac);
+    const fn = async () =>{
 
-    const tableResult = await knex175.select('TABLE_NAME')
-    .from('Bedplate2015.INFORMATION_SCHEMA.TABLES')
-    .where({TABLE_NAME:macStr});
+        //convert mac to mac without ':'
+        const macStr = formatMac(mac);
+    
+        const tableResult = await knex175.select('TABLE_NAME')
+        .from('Bedplate2015.INFORMATION_SCHEMA.TABLES')
+        .where({TABLE_NAME:macStr});
+    
+        return tableResult.length > 0? true : false;
+    }
 
-    return tableResult.length > 0? true : false;
+    return queryHandler(fn);
 }
 
 /**
@@ -56,60 +65,65 @@ const deviceTableExist = async (mac) =>{
  */
 const registerUser = async (schema, mac) => {
 
-    ////////////////BAL 176////////////////////
-    const trx176 = await knex176.transaction();
+    const fn = async () => {
 
-    //insert an user data to BAL
-    await trx176.insert(schema).into('BAL.dbo.CustomerInfo');
-
-    //binding user to device in BAL
-    await trx176.table('BAL.dbo.DeviceInfo').
-    update({CustomerId: schema.insertYmd}).
-    where({deviceMark:mac});
-
+        ////////////////BAL 176////////////////////
+        const trx176 = await knex176.transaction();
     
-    ////////////////bedplate2015 175////////////////////
-    const trx175 = await knex175.transaction();
-
-    //check if device in bedplate2015
-    const result = await trx175.select('*')
-    .from('Bedplate2015.dbo.ProductInfo')
-    .where({DeviceName: mac});
-
-    //if no device information in bedplate2015 insert a new one
-    //otherwise leave it be
-    if(result.length <= 0)
-    {
-        console.log('insert to bedplate');
-        await trx175.insert({DeviceName:mac}).into('Bedplate2015.dbo.ProductInfo');
+        //insert an user data to BAL
+        await trx176.insert(schema).into('BAL.dbo.CustomerInfo');
+    
+        //binding user to device in BAL
+        await trx176.table('BAL.dbo.DeviceInfo').
+        update({CustomerId: schema.insertYmd}).
+        where({deviceMark:mac});
+    
+        
+        ////////////////bedplate2015 175////////////////////
+        const trx175 = await knex175.transaction();
+    
+        //check if device in bedplate2015
+        const result = await trx175.select('*')
+        .from('Bedplate2015.dbo.ProductInfo')
+        .where({DeviceName: mac});
+    
+        //if no device information in bedplate2015 insert a new one
+        //otherwise leave it be
+        if(result.length <= 0)
+        {
+            console.log('insert to bedplate');
+            await trx175.insert({DeviceName:mac}).into('Bedplate2015.dbo.ProductInfo');
+        }
+    
+        //convert mac to mac without ':'
+        const macStr = formatMac(mac);
+    
+        //check if device mac table is existed in bedplate2015
+        const tableExist = await deviceTableExist(macStr);
+    
+        //create table for device and use mac name for table name
+        //if not exist in bedplate2015
+        if(!tableExist){
+            console.log(`table ${macStr} does not exist create one`);
+    
+            await trx175.schema.withSchema('Bedplate2015.dbo').createTable(macStr, table=>{
+                table.increments('ID').primary().notNullable();
+                table.integer('HeartbeatRate').notNullable();
+                table.integer('BreathingRate').nullable();
+                table.integer('PressureValue').nullable();
+                table.integer('FileIndex').nullable();
+                table.integer('SleepActivity').nullable();
+                table.dateTime('TimeStamp').nullable();
+                table.dateTime('ReceiveTime').nullable();
+                table.integer('HBReliability').nullable();
+            })
+        }
+    
+        await trx176.commit();
+        await trx175.commit();
     }
 
-    //convert mac to mac without ':'
-    const macStr = formatMac(mac);
-
-    //check if device mac table is existed in bedplate2015
-    const tableExist = await deviceTableExist(macStr);
-
-    //create table for device and use mac name for table name
-    //if not exist in bedplate2015
-    if(!tableExist){
-        console.log(`table ${macStr} does not exist create one`);
-
-        await trx175.schema.withSchema('Bedplate2015.dbo').createTable(macStr, table=>{
-            table.increments('ID').primary().notNullable();
-            table.integer('HeartbeatRate').notNullable();
-            table.integer('BreathingRate').nullable();
-            table.integer('PressureValue').nullable();
-            table.integer('FileIndex').nullable();
-            table.integer('SleepActivity').nullable();
-            table.dateTime('TimeStamp').nullable();
-            table.dateTime('ReceiveTime').nullable();
-            table.integer('HBReliability').nullable();
-        })
-    }
-
-    await trx176.commit();
-    await trx175.commit();
+    return queryHandler(fn);
 }
 
 /**
@@ -119,26 +133,37 @@ const registerUser = async (schema, mac) => {
  */
 const deviceInStore = async (mac)=>{
     
-    const result = await knex176.select('*')
-    .from('BAL.dbo.DeviceInfo')
-    .where({deviceMark: mac});
+    const fn = async () => {
 
-    return result.length > 0? true : false;
+        const result = await knex176.select('*')
+        .from('BAL.dbo.DeviceInfo')
+        .where({deviceMark: mac});
+
+        return result.length > 0? true : false;
+    }
+
+    return queryHandler(fn);
 }
 
 const deviceSample = async (mac, time)=>{
 
-    const macStr = formatMac(mac);
+    const fn = async () => {
 
-    const result = await knex175.select('*')
-    .from(`Bedplate2015.dbo.${macStr}`)
-    .where('TimeStamp', '>=', time);
+        const macStr = formatMac(mac);
 
-    return result;
+        const result = await knex175.select('*')
+        .from(`Bedplate2015.dbo.${macStr}`)
+        .where('TimeStamp', '>=', time);
+
+        return result;
+    }
+
+    return queryHandler(fn);
 }
 
 /**
  * Handle query's db error
+ * Generalized db error
  * @param {*} fn query function that need to be handled
  * @param  {...any} args arguements to be passed into function
  */
@@ -158,6 +183,5 @@ module.exports = {
     registerUser,
     deviceInStore,
     deviceSample,
-    deviceTableExist,
-    queryHandler
+    deviceTableExist
 }
