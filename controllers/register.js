@@ -20,7 +20,7 @@ const moment = require('moment');
 const uniqid = require('uniqid');
 const bcrypt = require('bcrypt');
 
-const {generateAPIKey} = require('../Utils/apiKeyGenerator');
+const generateAPIKey = require('../Utils/apiKeyGenerator');
 
 /**
  * setup initial schema

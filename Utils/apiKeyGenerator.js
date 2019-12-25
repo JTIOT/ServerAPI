@@ -17,6 +17,4 @@ const generateAPIKey = async (data) => {
     }
 }
 
-module.exports = {
-    generateAPIKey
-}
+module.exports = generateAPIKey;

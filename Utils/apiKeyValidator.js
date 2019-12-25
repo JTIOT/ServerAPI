@@ -12,13 +12,14 @@ const {
  * @param {*} res 
  * @param {*} next 
  */
-const apiKeyValidator = async (req, res, next) => {
+const apiKeyValidator = (req, res, next) => {
     const {apiKey} = req.body;
 
     if(apiKey){
         try{
-            await jwt.verify(apiKey, jwtPrivateKey);
-            next();
+            jwt.verify(apiKey, jwtPrivateKey);
+            return next();
+
         }
         catch(err){
             console.log('verify api key error ', err);
@@ -29,6 +30,4 @@ const apiKeyValidator = async (req, res, next) => {
     throwFail(API_KEY_REQUIRE_FAIL);
 }
 
-module.exports = {
-    apiKeyValidator
-}
+module.exports = apiKeyValidator;

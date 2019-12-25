@@ -6,6 +6,20 @@ const {throwError} = require('../../exceptionHandler/exceptionHandler');
 const {DB_ERROR} = require('../../exceptionHandler/databaseErrors/databaseErrorTypes');
 
 /**
+ * convert mac to mac without ':'
+ * @param {*} mac 
+ */
+const formatMac = (mac) => {
+
+    //convert mac to mac without ':'
+    const macStr = mac.split("").filter((c)=>{ 
+        return c != ":";
+    }).join("");
+
+    return macStr;
+}
+
+/**
  * Query find user in DB in 176
  * @param {*} userName 
  * @param (*) return true if user exist otherwise false
@@ -17,6 +31,22 @@ const userExist = async (userName) =>{
     .where({homeTel: userName});
 
     return result.length > 0? true : false;
+}
+
+/**
+ * Check if table of device is in db
+ * @param {*} mac 
+ */
+const deviceTableExist = async (mac) =>{
+
+    //convert mac to mac without ':'
+    const macStr = formatMac(mac);
+
+    const tableResult = await knex175.select('TABLE_NAME')
+    .from('Bedplate2015.INFORMATION_SCHEMA.TABLES')
+    .where({TABLE_NAME:macStr});
+
+    return tableResult.length > 0? true : false;
 }
 
 /**
@@ -55,18 +85,14 @@ const registerUser = async (schema, mac) => {
     }
 
     //convert mac to mac without ':'
-    const macStr = mac.split("").filter((c)=>{ 
-        return c != ":";
-    }).join("");
+    const macStr = formatMac(mac);
 
     //check if device mac table is existed in bedplate2015
-    const tableResult = await trx175.select('TABLE_NAME')
-    .from('Bedplate2015.INFORMATION_SCHEMA.TABLES ')
-    .where({TABLE_NAME:macStr});
+    const tableExist = await deviceTableExist(macStr);
 
     //create table for device and use mac name for table name
     //if not exist in bedplate2015
-    if(tableResult.length <= 0){
+    if(!tableExist){
         console.log(`table ${macStr} does not exist create one`);
 
         await trx175.schema.withSchema('Bedplate2015.dbo').createTable(macStr, table=>{
@@ -100,6 +126,17 @@ const deviceInStore = async (mac)=>{
     return result.length > 0? true : false;
 }
 
+const deviceSample = async (mac, time)=>{
+
+    const macStr = formatMac(mac);
+
+    const result = await knex175.select('*')
+    .from(`Bedplate2015.dbo.${macStr}`)
+    .where('TimeStamp', '>=', time);
+
+    return result;
+}
+
 /**
  * Handle query's db error
  * @param {*} fn query function that need to be handled
@@ -120,5 +157,7 @@ module.exports = {
     userExist,
     registerUser,
     deviceInStore,
+    deviceSample,
+    deviceTableExist,
     queryHandler
 }
