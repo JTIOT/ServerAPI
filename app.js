@@ -40,10 +40,12 @@ app.use('/user', userRoute);
 //exception handler
 app.use(ExceptionHandler);
 
-app.listen(port, (error)=>{
+const server = app.listen(port, (error)=>{
     if(error){
         console.log('Error while starting server ', error);
         return;
     }
-    console.log(`Server started at port ${port} !!!`);
+    const address = server.address().address;
+    const sPort = server.address().port;
+    console.log(`Server started at ${address} port ${sPort} !!!`);
 });

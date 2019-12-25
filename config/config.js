@@ -22,8 +22,20 @@ const dbConfig175 = {
 
 const jwtPrivateKey = 'This is private';
 
+const mailConfig = {
+  pool: true,
+  host: "192.168.5.185",
+  port: 25,
+  secure: false, // use TLS
+  auth: {
+    user: "test@192.168.5.185",
+    pass: "23236229"
+  }
+}
+
 module.exports= {
     dbConfig176,
     dbConfig175,
-    jwtPrivateKey
+    jwtPrivateKey,
+    mailConfig
 }

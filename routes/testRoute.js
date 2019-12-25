@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const path  = require('path');
 const {
     throwError,
     throwFail, 
@@ -10,6 +11,7 @@ const testFailTypes = require('../exceptionHandler/testFails/testFailTypes');
 const asyncHandler = require('express-async-handler'); 
 
 const {apiKeyValidator} = require('../middlewares/apiKeyValidator');
+const sendForgotPassMail = require('../Utils/email');
 
 
 //test Error handling
@@ -38,6 +40,19 @@ router.post('/testAPIKey', asyncHandler(apiKeyValidator), asyncHandler(async (re
         message:'api key passed'
     }
     res.success({data});
+}));
+
+router.post('/sendMail', asyncHandler(async (req, res, next) => {
+
+    const {sender , receiver} = req.body;
+    const templateVar = {
+        userName: "stupid",
+        link: "www.google.com"
+    }
+    await sendForgotPassMail(sender, receiver, 
+        path.join(process.cwd(), 'emailTemplate','forgotPassTemp'),
+        templateVar);
+    res.success();
 }));
 
 module.exports = router;
