@@ -10,13 +10,6 @@ const asyncHandler = require('express-async-handler');
 
 router.post('/register', asyncHandler(registerController));
 
-router.get('/resetPassword', asyncHandler(async (req, res)=>{
-
-    const {token} = req.param;
-    console.log('entry token ', token);
-    res.success();
-}));
-
 router.post('/resetPassword', asyncHandler(sendResetPassMail));
 
 router.use(apiKeyValidator);

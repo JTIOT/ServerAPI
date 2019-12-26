@@ -8,6 +8,7 @@ const {DB_ERROR} = require('../../exceptionHandler/databaseErrors/databaseErrorT
 /**
  * convert mac to mac without ':'
  * @param {*} mac 
+ * @return {*} formatted mac
  */
 const formatMac = (mac) => {
 
@@ -22,7 +23,7 @@ const formatMac = (mac) => {
 /**
  * Query find user in DB in 176
  * @param {*} userName 
- * @param (*) return true if user exist otherwise false
+ * @return {*} true if user exist otherwise false
  */
 const userExist = async (userName) =>{
 
@@ -38,8 +39,36 @@ const userExist = async (userName) =>{
 }
 
 /**
+ * get user information
+ * @param {*} userName 
+ * @return {*} an object with userId and email otherwise null
+ */
+const getUserInfo = async (userName) => {
+
+    const fn = async ()=>{
+
+        const result  = await knex176.select('*')
+        .from('BAL.dbo.CustomerInfo')
+        .where({homeTel: userName});
+
+        if(result.length > 0){
+            const user = result[0];
+            return {
+                userId: user.balAccount,
+                email: user.Email
+            }
+        }
+
+        return null;
+    }
+
+    return queryHandler(fn);
+}
+
+/**
  * Check if table of device is in db
- * @param {*} mac 
+ * @param {*} mac
+ * @return {*} true if device table in db otherwise false 
  */
 const deviceTableExist = async (mac) =>{
 
@@ -129,7 +158,7 @@ const registerUser = async (schema, mac) => {
 /**
  * Query check if device mac is already in store/published in 176 BAL
  * @param {*} mac  device mac
- * @param {*} return true if device is in store/published otherwsie false
+ * @return {*} true if device is in store/published otherwsie false
  */
 const deviceInStore = async (mac)=>{
     
@@ -145,6 +174,12 @@ const deviceInStore = async (mac)=>{
     return queryHandler(fn);
 }
 
+/**
+ * get device sample data from certin time point
+ * @param {*} mac - device mac
+ * @param {*} time - time point to start getting sample
+ * @return {*} array of sample
+ */
 const deviceSample = async (mac, time)=>{
 
     const fn = async () => {
@@ -183,5 +218,6 @@ module.exports = {
     registerUser,
     deviceInStore,
     deviceSample,
+    getUserInfo,
     deviceTableExist
 }

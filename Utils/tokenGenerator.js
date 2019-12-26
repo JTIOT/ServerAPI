@@ -5,11 +5,12 @@ const {TOKEN_CREATE_FAIL} = require('../exceptionHandler/tokenFails/tokenFailTyp
 
 /**
  * generate api key
- * @param {*} data 
+ * @param {*} data - data that will be used to generate token
+ * @param {*} expireInSec - seconds before token expired
  */
-const generatToken = async (data, expire='1h') => {
+const generatToken = async (data, expireInSec=3600) => {
     try{
-        return await jwt.sign(data, jwtPrivateKey, {expiresIn: expire});
+        return await jwt.sign(data, jwtPrivateKey, {expiresIn: expireInSec});
     }
     catch(err){
         console.log('jwt', err);

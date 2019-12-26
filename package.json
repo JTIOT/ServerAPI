@@ -5,13 +5,15 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "start-dev": "concurrently --kill-others \"nodemon app.js\" \"cd client/resetpass && npm start\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^3.0.7",
     "body-parser": "^1.19.0",
+    "concurrently": "^5.0.2",
     "email-templates": "^6.1.1",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
