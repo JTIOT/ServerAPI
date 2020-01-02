@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const { JSend } = require('jsend-express')
 const {ExceptionHandler} = require('./exceptionHandler/exceptionHandler');
@@ -15,6 +16,9 @@ const jSend = new JSend({ name: 'serverApp', version: '0.0.1', release: '01' });
 
 //init express
 const app = express();
+
+//use cors
+app.use(cors());
 
 //jSend response middle ware
 app.use(jSend.middleware.bind(jSend));

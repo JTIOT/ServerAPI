@@ -40,26 +40,54 @@ const userExist = async (userName) =>{
 
 /**
  * get user information
- * @param {*} userName 
+ * @param {*} condition is an object and will be used in sql where clause  
  * @return {*} an object with userId and email otherwise null
  */
-const getUserInfo = async (userName) => {
+const getUserInfoBy = async (condition) => {
 
     const fn = async ()=>{
 
         const result  = await knex176.select('*')
         .from('BAL.dbo.CustomerInfo')
-        .where({homeTel: userName});
+        .where(condition);
 
         if(result.length > 0){
             const user = result[0];
             return {
                 userId: user.balAccount,
-                email: user.Email
+                email: user.Email,
+                userName: user.homeTel,
+                password: user.password
             }
         }
 
         return null;
+    }
+
+    return queryHandler(fn);
+}
+
+/**
+ * update user password 
+ * @param {*} userId 
+ * @param {*} newPassword
+ * @return true update success otherwise false 
+ */
+const updateUserPassword = async (userId, newPassword) => {
+
+    const fn = async ()=>{
+
+        const result = await knex176.update({
+            password: newPassword
+        }, ['balAccount'])
+        .from('BAL.dbo.CustomerInfo')
+        .where({balAccount: userId});
+
+        if(result.length > 0){
+            return true;
+        }
+
+        return false;
     }
 
     return queryHandler(fn);
@@ -216,8 +244,9 @@ const queryHandler = async (fn, ...args)=>{
 module.exports = {
     userExist,
     registerUser,
+    updateUserPassword,
     deviceInStore,
     deviceSample,
-    getUserInfo,
+    getUserInfoBy,
     deviceTableExist
 }

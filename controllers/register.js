@@ -17,7 +17,7 @@ const {
 
 const moment = require('moment');
 const uniqid = require('uniqid');
-const bcrypt = require('bcrypt');
+const {hashPassword} = require('../Utils/passwordHandler');
 
 const generateAPIKey = require('../Utils/apiKeyGenerator');
 
@@ -26,7 +26,7 @@ const generateAPIKey = require('../Utils/apiKeyGenerator');
  */
 const getInitialSchema = ()=>{
 
-    const keyId = moment().format('YYYYMMDDhhmmssSSS');
+    const keyId = moment().format('YYYYMMDDhhmmss');
     const insertYmd = keyId;
     const updateYmd = keyId;
     const insertId = 'SYSTEM';
@@ -109,7 +109,7 @@ const register = async (req, res, next) => {
 
         //setup schema
         registerSchema.homeTel = userName;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await hashPassword(password);
         registerSchema.password = hashedPassword;
         registerSchema.Email = email;
 

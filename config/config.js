@@ -24,11 +24,11 @@ const jwtPrivateKey = 'This is private';
 
 const mailConfig = {
   pool: true,
-  host: "192.168.5.185",
+  host: "192.168.5.173",
   port: 25,
   secure: false, // use TLS
   auth: {
-    user: "test@192.168.5.185",
+    user: "test@192.168.5.173",
     pass: "23236229"
   }
 }
