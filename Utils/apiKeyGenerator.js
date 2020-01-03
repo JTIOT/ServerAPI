@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const {jwtPrivateKey} = require('../config/config');
 const {throwFail} = require('../exceptionHandler/exceptionHandler');
-const {API_KEY_CREATE_FAIL} = require('../exceptionHandler/apiKeyFails/apiKeyFailTypes');
+const {API_KEY_CREATE_FAIL} = require('../exceptionHandler/fails/apiKeyFails/apiKeyFailTypes');
 
 /**
  * generate api key

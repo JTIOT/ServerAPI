@@ -14,7 +14,12 @@ const cusomterInfoSchema = {
     insertYmd: '', 
     insertId: '', 
     updateYmd: '', 
-    updateId: ''
+    updateId: '',
+    customerStatus: 0,
+    openTime: '',
+    regionFlag: -1,
+    port: 2,
+    countryCode: 'TW'
 }
 
 module.exports = {

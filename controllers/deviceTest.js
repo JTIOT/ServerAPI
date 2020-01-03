@@ -8,7 +8,7 @@ const {throwFail} = require('../exceptionHandler/exceptionHandler');
 
 const {
     DEVICE_NOT_EXIST
-}  = require('../exceptionHandler/deviceTestFails/deviceTestFailTypes');
+}  = require('../exceptionHandler/fails/deviceTestFails/deviceTestFailTypes');
 
 const moment = require('moment');
 

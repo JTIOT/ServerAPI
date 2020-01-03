@@ -1,4 +1,4 @@
-const {createErrorType} = require('../exceptionTypes');
+const {createErrorType} = require('../../exceptionTypes');
 
 const testErrorTypes = {
     GENERAL_ERROR: createErrorType('General error'),

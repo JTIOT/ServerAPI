@@ -19,7 +19,7 @@ const {
     TOKEN_REQUIRE,
     NEW_PASS_REQUIRE,
     RESET_PASS_FAIL
-} = require('../exceptionHandler/resetPassFails/resetPassFailTypes');
+} = require('../exceptionHandler/fails/resetPassFails/resetPassFailTypes');
 
 const {
     getUserInfoBy,
@@ -62,7 +62,8 @@ const sendResetPassMail = async (req, res, next) => {
         console.log('resetPass link ', resetPassLink);
         const templateVar = {
             userName: userName,
-            link: resetPassLink
+            link: resetPassLink,
+            expiredTime: '1 hour'
         }
         await sendForgotPassMail(sender, user.email, 
             path.join(process.cwd(), 'emailTemplate','forgotPassTemp'),

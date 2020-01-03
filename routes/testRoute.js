@@ -5,8 +5,8 @@ const {
     throwError,
     throwFail, 
         } = require('../exceptionHandler/exceptionHandler');
-const testErrorTypes = require('../exceptionHandler/testErrors/testErrorTypes');
-const testFailTypes = require('../exceptionHandler/testFails/testFailTypes');
+const testErrorTypes = require('../exceptionHandler/errors/testErrors/testErrorTypes');
+const testFailTypes = require('../exceptionHandler/fails/testFails/testFailTypes');
 
 const asyncHandler = require('express-async-handler'); 
 
@@ -41,6 +41,10 @@ router.post('/testAPIKey', asyncHandler(apiKeyValidator), asyncHandler(async (re
     }
     res.success({data});
 }));
+
+router.post('/errorTest', async (req, res)=>{
+    res.status(611).json({});
+})
 
 router.post('/sendMail', asyncHandler(async (req, res, next) => {
 

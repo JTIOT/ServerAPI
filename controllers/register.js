@@ -13,7 +13,7 @@ const {
     PASSWORD_REQUIRED,
     INVALID_MAC,
     DEVICE_NOT_IN_STORE
-} = require('../exceptionHandler/registerFails/registerFailTypes');
+} = require('../exceptionHandler/fails/registerFails/registerFailTypes');
 
 const moment = require('moment');
 const uniqid = require('uniqid');
@@ -31,6 +31,7 @@ const getInitialSchema = ()=>{
     const updateYmd = keyId;
     const insertId = 'SYSTEM';
     const updateId = insertId;
+    const openTime = keyId;
     const balAccount = uniqid();
 
     const ret = {...cusomterInfoSchema,
@@ -39,7 +40,8 @@ const getInitialSchema = ()=>{
         insertYmd,
         insertId,
         updateYmd,
-        updateId
+        updateId,
+        openTime
     }
 
     return ret;
@@ -51,6 +53,7 @@ const getInitialSchema = ()=>{
  */
 const isValidMac = (mac) => {
 
+    console.log('validate mac format ', mac);
     if(mac){
         return mac.split(':').length === 6? true : false;
     }

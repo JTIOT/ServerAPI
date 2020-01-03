@@ -7,7 +7,7 @@ const {
     TOKEN_INVAILD_FAIL,
     TOKEN_NOT_ACTIVE_FAIL,
     TOKEN_UNKNOW_FAIL
-} = require('../exceptionHandler/tokenFails/tokenFailTypes');
+} = require('../exceptionHandler/fails/tokenFails/tokenFailTypes');
 
 /**
  * generate api key

@@ -4,7 +4,7 @@ const {throwFail} = require('../exceptionHandler/exceptionHandler');
 const {
     API_KEY_REQUIRE_FAIL,
      API_KEY_VERIFY_FAIL
-    } = require('../exceptionHandler/apiKeyFails/apiKeyFailTypes');
+    } = require('../exceptionHandler/fails/apiKeyFails/apiKeyFailTypes');
 
 /**
  *  validate an api key
