@@ -1,7 +1,13 @@
 const jwt = require('jsonwebtoken');
 const {jwtPrivateKey} = require('../config/config');
 const {throwFail} = require('../exceptionHandler/exceptionHandler');
-const {TOKEN_CREATE_FAIL} = require('../exceptionHandler/tokenFails/tokenFailTypes');
+const {
+    TOKEN_CREATE_FAIL,
+    TOKEN_EXPIRE_FAIL,
+    TOKEN_INVAILD_FAIL,
+    TOKEN_NOT_ACTIVE_FAIL,
+    TOKEN_UNKNOW_FAIL
+} = require('../exceptionHandler/tokenFails/tokenFailTypes');
 
 /**
  * generate api key
@@ -13,7 +19,7 @@ const {TOKEN_CREATE_FAIL} = require('../exceptionHandler/tokenFails/tokenFailTyp
 const generatToken = async (data, secretKey=jwtPrivateKey, expireInSec=3600) => {
     try{
         console.log('sign token with secret ', secretKey);
-        return await jwt.sign(data, secretKey);
+        return await jwt.sign(data, secretKey, { expiresIn: expireInSec });
     }
     catch(err){
         console.log('jwt', err);
@@ -27,13 +33,24 @@ const validateToken = async (token, secretKey) => {
     try{
 
         const decoded = jwt.verify(token, secretKey);
-        if(decoded){
-            return true;
-        }
+        return decoded
     }
     catch(err){
         console.log('error while validating token ', err);
-            return false;
+        
+        switch(err.name){
+            case 'TokenExpiredError':
+                throwFail(TOKEN_EXPIRE_FAIL);
+                break;
+            case 'JsonWebTokenError':
+                throwFail(TOKEN_INVAILD_FAIL);
+                break;
+            case 'NotBeforeError':
+                throwFail(TOKEN_NOT_ACTIVE_FAIL);
+                break;
+            default:
+                throwFail(TOKEN_UNKNOW_FAIL);
+        }
     }
 }
 

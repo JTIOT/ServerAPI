@@ -16,7 +16,6 @@ const {
     USER_NOT_FOUND,
     USER_DO_NOT_HAVE_EMAIL,
     USER_ID_REQUIRE,
-    TOKEN_INVALID,
     TOKEN_REQUIRE,
     NEW_PASS_REQUIRE,
     RESET_PASS_FAIL
@@ -33,6 +32,7 @@ const {
  * @param {*} res 
  * @param {*} next 
  */
+const tokenExpiredDuration = 3600;//how long before token expired in seconds
 const sendResetPassMail = async (req, res, next) => {
     const {userName} = req.body;
 
@@ -55,7 +55,7 @@ const sendResetPassMail = async (req, res, next) => {
             userId: user.userId,
             userName: user.userName,
             email: user.email
-        }, user.password);
+        }, user.password, tokenExpiredDuration);
 
         const sender = 'abc@jtiot.net';
         const resetPassLink = `${resetPassClientUrl}/${user.userId}/${token}`;
@@ -110,10 +110,7 @@ const resetPassword = async (req, res, next)=>{
     const oldPass = user.password;
     
     //check token is valid with old password
-    const isTokenValid = await validateToken(token, oldPass);
-    if(!isTokenValid){
-        throwFail(TOKEN_INVALID);
-    }
+    await validateToken(token, oldPass);
     
     //update password
     const updatePassSuccess = await updateUserPassword(userId, hashedPassword);
