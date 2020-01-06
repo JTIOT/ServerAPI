@@ -3,6 +3,8 @@ const router = express.Router();
 
 const registerController = require('../controllers/register');
 const deviceTestController = require('../controllers/deviceTest');
+const loginController = require('../controllers/login');
+
 const {
     sendResetPassMail,
     resetPassword
@@ -15,6 +17,7 @@ router.post('/register', asyncHandler(registerController));
 
 router.post('/forgotPassword', asyncHandler(sendResetPassMail));
 router.post('/resetPassword', asyncHandler(resetPassword));
+router.post('/login', asyncHandler(loginController));
 
 router.use(apiKeyValidator);
 

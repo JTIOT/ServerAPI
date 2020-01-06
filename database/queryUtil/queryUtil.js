@@ -25,7 +25,7 @@ const formatMac = (mac) => {
  * @param {*} userName 
  * @return {*} true if user exist otherwise false
  */
-const userExist = async (userName) =>{
+const userExist = (userName) =>{
 
     const fn = async ()=>{
         const result = await knex176.select('*')
@@ -41,9 +41,9 @@ const userExist = async (userName) =>{
 /**
  * get user information
  * @param {*} condition is an object and will be used in sql where clause  
- * @return {*} an object with userId and email otherwise null
+ * @return {*} an object with userId, email userName and password otherwise null
  */
-const getUserInfoBy = async (condition) => {
+const getUserInfoBy = (condition) => {
 
     const fn = async ()=>{
 
@@ -54,6 +54,7 @@ const getUserInfoBy = async (condition) => {
         if(result.length > 0){
             const user = result[0];
             return {
+                keyId: user.keyId,
                 userId: user.balAccount,
                 email: user.Email,
                 userName: user.homeTel,
@@ -68,12 +69,36 @@ const getUserInfoBy = async (condition) => {
 }
 
 /**
+ * get device mac
+ * @param {*} keyId user keyId in CustomerInfo table 
+ * @return device mac in string
+ */
+const getDeviceMacByUserKeyId = (keyId) => {
+
+    const fn = async ()=>{
+
+        const result = await knex176.select('*')
+        .from('BAL.dbo.DeviceInfo')
+        .where({customerId: keyId})
+
+        if(result.length > 0){
+            const deviceInfo = result[0];
+            return deviceInfo.deviceMark;
+        }
+
+        return null;
+    }
+
+    return queryHandler(fn);
+}
+
+/**
  * update user password 
  * @param {*} userId 
  * @param {*} newPassword
  * @return true update success otherwise false 
  */
-const updateUserPassword = async (userId, newPassword) => {
+const updateUserPassword = (userId, newPassword) => {
 
     const fn = async ()=>{
 
@@ -98,7 +123,7 @@ const updateUserPassword = async (userId, newPassword) => {
  * @param {*} mac
  * @return {*} true if device table in db otherwise false 
  */
-const deviceTableExist = async (mac) =>{
+const deviceTableExist = (mac) =>{
 
     const fn = async () =>{
 
@@ -120,7 +145,7 @@ const deviceTableExist = async (mac) =>{
  * @param {*} schema  cusomterInfoSchema
  * @param {*} mac device's mac
  */
-const registerUser = async (schema, mac) => {
+const registerUser = (schema, mac) => {
 
     const fn = async () => {
 
@@ -277,7 +302,7 @@ const registerUser = async (schema, mac) => {
  * @param {*} mac  device mac
  * @return {*} true if device is in store/published otherwsie false
  */
-const deviceInStore = async (mac)=>{
+const deviceInStore = (mac)=>{
     
     const fn = async () => {
 
@@ -286,8 +311,8 @@ const deviceInStore = async (mac)=>{
         .where({deviceMark: mac});
 
         const device = result[0];
-
-        return result && result.deviceStatusMark === '1'? true : false;
+        console.log('device', device);
+        return device && device.deviceStatusMark === '1'? true : false;
     }
 
     return queryHandler(fn);
@@ -299,7 +324,7 @@ const deviceInStore = async (mac)=>{
  * @param {*} time - time point to start getting sample
  * @return {*} array of sample
  */
-const deviceSample = async (mac, time)=>{
+const deviceSample = (mac, time)=>{
 
     const fn = async () => {
 
@@ -339,5 +364,6 @@ module.exports = {
     deviceInStore,
     deviceSample,
     getUserInfoBy,
+    getDeviceMacByUserKeyId,
     deviceTableExist
 }
