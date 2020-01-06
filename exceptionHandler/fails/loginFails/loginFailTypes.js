@@ -10,7 +10,7 @@ const registerFailTypes = {
     USER_NOT_EXIST: createFailType(failTag, 1002, 'User name do not exist'),
     LOGIN_FAIL: createFailType(failTag, 1003, 'Login fail'),
     PASSWORD_INVALID: createFailType(failTag, 1004, 'Password is invalid'),
-    USER_MAC_MISSING: createFailType(failTag, 1005, 'User device mac missing')
+    USER_MAC_MISSING: createFailType(failTag, 1005, 'User name is not binding to any device mac')
 };
 
 module.exports = registerFailTypes;
