@@ -65,10 +65,12 @@ const sendResetPassMail = async (req, res, next) => {
             link: resetPassLink,
             expiredTime: '1 hour'
         }
+
         await sendForgotPassMail(sender, user.email, 
             path.join(process.cwd(), 'emailTemplate','forgotPassTemp'),
             templateVar);
-        res.success();
+
+        res.success({data:{}});
     }
     catch(err){
         throw err;

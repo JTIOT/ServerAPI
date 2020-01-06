@@ -12,6 +12,11 @@ const ResetPassword = ({match})=>{
     const [serverErrorMsg, setServerErrorMsg] = useState('');
 
     useEffect(()=>{
+        if(!newPassword && !confirmPassword){
+            setPassErrorMsg('Please, enter your new password');
+            return; 
+        }
+        
         if(newPassword !== confirmPassword ||
             !newPassword || !confirmPassword ){
             setPassErrorMsg('Password is not matched');
