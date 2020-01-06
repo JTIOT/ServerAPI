@@ -128,7 +128,8 @@ const registerUser = async (schema, mac) => {
         const trx176 = await knex176.transaction();
     
         //insert an user data to BAL
-        await trx176.insert(schema).into('BAL.dbo.CustomerInfo');
+        await trx176.insert(schema)
+        .into('BAL.dbo.CustomerInfo');
     
         //binding user to device in BAL
         await trx176.table('BAL.dbo.DeviceInfo').
@@ -149,81 +150,95 @@ const registerUser = async (schema, mac) => {
         if(result.length <= 0)
         {
             console.log('insert to bedplate');
-            const pInfo = await trx175.insert({
+            await trx175.insert({
                 DeviceName:mac,
-                Address: '',
-                HeartStatus: '無法檢測',
-                HeartrateMin: 40,
-                IsOnBed: 0,
-                HeartbeatUnusualObserveTime: 5,
-                DeviceStatus: '0',
-                DevOfflineTime: 30,
-                SysNo: '20140813',
-                AppNo: '20140813',
-                HardwareNo: 'A0303',
-                ClientIP: '60.248.43.175',
-                SerialportOfflineFlag: 0,
-                NetworkOfflineFlag: 0,
-                UnusualAlarmFlag: 0,
-                WeightAlarmTime: '',
-                WeightAlarmInterval: 3,
-                ReportOrNot: 0,
-                DoorMac: '0',
-                LastConnectionTimeStamp: '',
-                LastRebootTime:'',
-                LastUpdateTime:'',
-                CreateDate: '',
-                Similarity: 30,
-                BCGModel: '1',
-                Delay: 0,
-                ReferenceHeartrate: 65,
-                OnBedRange: 0,
-                LeaveBedRange: 1023,
-                OnBedObserveTime: 0,
-                LeaveBedObserveTime: 0,
-                BreathRate: 15,
-                BreathDelay: 0,
-                BreathOrNot: 0,
-                StrictOrNot: 0,
-                Noise: 0,
-                usualOnBedTime: '0:00',
-                usualLeaveBedTime: '6:00',
-                usualOnBedValue: -1,
-                usualLeaveBedValue: -1,
-                UserAge: '33',
-                BedplateUserName: '測試',
-                SaveFileMaxDays: '30',
-                SaveFileOrNot: '0',
-                Disease:'',
-                OnBedValueUpdateTime: '',
-                LeaveBedValueUpdateTime: '',
-                HBSensorAlarmTime: '',
-                HBSensorAlarmInterval: 1,
-                UserName: 'admin',
-                IsAlwaysPullPlug: 0,
-                HBFastAlarmTime: '',
-                HBFastAlarmInterval: 1,
-                HBSlowAlarmTime: '',
-                HBSlowAlarmInterval: 1,
-                BreathAlarmTime: '',
-                BreathAlarmInterval: 1,
-                NetworkFaultFlag: 0,
-                MaxIncrement: -1,
-                MaxIncrementTime: '',
-                LeaveBedMinValue: -1,
-                LatestLeaveValue: -1,
-                LatestLeaveBeginTime: '',
-                LatestLeaveEndTime: '',
-                BedplateSensorFaultTime: '',
-                LastSyncHBDataID: 0,
-                LastSyncBRDataID: 0,
-                LastSyncOnBedRecordID: 0,
-                LastSyncSleepRecordID: 0,
-                LastSyncWDataID: 0,
-                SourceName: 0,
-                DeviceToken: ''
-            }).into('Bedplate2015.dbo.ProductInfo');
-            console.log('pInfo', pInfo);
+                // Address: '',
+                // HeartStatus: '無法檢測',
+                // HeartrateMin: 40,
+                // IsOnBed: 0,
+                // HeartbeatUnusualObserveTime: 5,
+                // DeviceStatus: '0',
+                // DevOfflineTime: 30,
+                // SysNo: '20140813',
+                // AppNo: '20140813',
+                // HardwareNo: 'A0303',
+                // ClientIP: '60.248.43.175',
+                // SerialportOfflineFlag: 0,
+                // NetworkOfflineFlag: 0,
+                // UnusualAlarmFlag: 0,
+                // WeightAlarmTime: '',
+                // WeightAlarmInterval: 3,
+                // ReportOrNot: 0,
+                // DoorMac: '0',
+                // LastConnectionTimeStamp: '',
+                // LastRebootTime:'',
+                // LastUpdateTime:'',
+                // CreateDate: '',
+                // Similarity: 30,
+                // BCGModel: '1',
+                // Delay: 0,
+                // ReferenceHeartrate: 65,
+                // OnBedRange: 0,
+                // LeaveBedRange: 1023,
+                // OnBedObserveTime: 0,
+                // LeaveBedObserveTime: 0,
+                // BreathRate: 15,
+                // BreathDelay: 0,
+                // BreathOrNot: 0,
+                // StrictOrNot: 0,
+                // Noise: 0,
+                // usualOnBedTime: '0:00',
+                // usualLeaveBedTime: '6:00',
+                // usualOnBedValue: -1,
+                // usualLeaveBedValue: -1,
+                // UserAge: '33',
+                // BedplateUserName: '測試',
+                // SaveFileMaxDays: '30',
+                // SaveFileOrNot: '0',
+                // Disease:'',
+                // OnBedValueUpdateTime: '',
+                // LeaveBedValueUpdateTime: '',
+                // HBSensorAlarmTime: '',
+                // HBSensorAlarmInterval: 1,
+                // UserName: 'admin',
+                // IsAlwaysPullPlug: 0,
+                // HBFastAlarmTime: '',
+                // HBFastAlarmInterval: 1,
+                // HBSlowAlarmTime: '',
+                // HBSlowAlarmInterval: 1,
+                // BreathAlarmTime: '',
+                // BreathAlarmInterval: 1,
+                // NetworkFaultFlag: 0,
+                // MaxIncrement: -1,
+                // MaxIncrementTime: '',
+                // LeaveBedMinValue: -1,
+                // LatestLeaveValue: -1,
+                // LatestLeaveBeginTime: '',
+                // LatestLeaveEndTime: '',
+                // BedplateSensorFaultTime: '',
+                // LastSyncHBDataID: 0,
+                // LastSyncBRDataID: 0,
+                // LastSyncOnBedRecordID: 0,
+                // LastSyncSleepRecordID: 0,
+                // LastSyncWDataID: 0,
+                // SourceName: 0,
+                // DeviceToken: ''
+            })
+            .into('Bedplate2015.dbo.ProductInfo');
+
+            //update inserted data id into customer info in BAL
+            // const insertedResult = await trx175.select('ID')
+            // .from('Bedplate2015.dbo.ProductInfo')
+            // .where({DeviceName: mac});
+
+            // if(insertedResult.length > 0){
+            //     console.log('insertedResult ', insertedResult);
+            //     const insertedId = insertedResult[0].ID;
+
+            //     await trx176.update({ID: insertedId})
+            //     .from('BAL.dbo.CustomerInfo')
+            //     .where({balAccount: schema.balAccount})
+            // }
         }
     
         //convert mac to mac without ':'
@@ -270,7 +285,9 @@ const deviceInStore = async (mac)=>{
         .from('BAL.dbo.DeviceInfo')
         .where({deviceMark: mac});
 
-        return result.length > 0? true : false;
+        const device = result[0];
+
+        return result && result.deviceStatusMark === '1'? true : false;
     }
 
     return queryHandler(fn);

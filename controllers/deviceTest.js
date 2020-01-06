@@ -41,7 +41,7 @@ const deviceTest = async (req, res, next) => {
     }
     
     //retrieve samples within last time in seconds
-    const samplingFromLastSec = 5;
+    const samplingFromLastSec = 30;
 
     //create sampling time point
     const samplingTimePoint = moment()
@@ -51,6 +51,7 @@ const deviceTest = async (req, res, next) => {
     console.log('get sample from time point ', samplingTimePoint);
     const result = await deviceSample(mac, samplingTimePoint);
 
+    console.log('sample result', result);
     //filter sample
     const filtedResult = sampleFilter(result);
 
