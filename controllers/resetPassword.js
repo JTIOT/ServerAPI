@@ -13,13 +13,16 @@ const {
 } = require('../exceptionHandler/exceptionHandler');
 
 const {
-    USER_NOT_FOUND,
-    USER_DO_NOT_HAVE_EMAIL,
     USER_ID_REQUIRE,
     TOKEN_REQUIRE,
     NEW_PASS_REQUIRE,
     RESET_PASS_FAIL
 } = require('../exceptionHandler/fails/resetPassFails/resetPassFailTypes');
+
+const {
+    USER_NOT_FOUND,
+    USER_DO_NOT_HAVE_EMAIL
+} = require('../exceptionHandler/fails/forgotPassFails/forgotPassFailTypes');
 
 const {
     getUserInfoBy,
