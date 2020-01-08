@@ -1,12 +1,9 @@
 const {
-    dbConfig176, 
-    dbConfig175
+    dbConfig
 } = require('../config/config');
 
-const knex176 = require('knex')(dbConfig176);
-const knex175 = require('knex')(dbConfig175);
+const knex = require('knex')(dbConfig);
 
 module.exports = {
-    knex176,
-    knex175
+    knex
 }

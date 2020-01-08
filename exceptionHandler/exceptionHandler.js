@@ -1,7 +1,5 @@
 const {
-    exceptionTypes,
-    ErrorException,
-    FailException
+    exceptionTypes
 } = require('./exceptionTypes');
 
 
@@ -36,10 +34,8 @@ const failHandler = async (excp, req, res, next) => {
             error:{
                 message: excp.message,
                 errors:{
-                    state: {
-                        stateCode:excp.code,
-                        stateTag:excp.tag
-                    }
+                    code:excp.code,
+                    tag:excp.tag
                 }
             }
         });

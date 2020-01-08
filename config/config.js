@@ -1,19 +1,19 @@
-const dbConfig176 = {
-    client: 'mssql',
-    debug: true,
-    connection: {
-      host : '60.248.43.176',
-      user : 'sa',
-      password : '62C50298',
-      database : 'master'
-    }
-}
+// const dbConfig176 = {
+//     client: 'mssql',
+//     debug: true,
+//     connection: {
+//       host : '60.248.43.176',
+//       user : 'sa',
+//       password : '62C50298',
+//       database : 'master'
+//     }
+// }
 
-const dbConfig175 = {
+const dbConfig = {
   client: 'mssql',
   debug: true,
   connection: {
-    host : '60.248.43.175',
+    host : '192.168.5.169',
     user : 'sa',
     password : 'jtiot!@#1208',
     database : 'master'
@@ -34,8 +34,7 @@ const mailConfig = {
 }
 
 module.exports= {
-    dbConfig176,
-    dbConfig175,
+    dbConfig,
     jwtPrivateKey,
     mailConfig
 }

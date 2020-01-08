@@ -87,8 +87,6 @@ const createFailType = (failTag, failCode, failMessage) => {
 
 module.exports = {
     exceptionTypes,
-    ErrorException,
-    FailException,
     createErrorType,
     createFailType
 }
