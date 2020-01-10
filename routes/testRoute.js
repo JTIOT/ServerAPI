@@ -16,12 +16,13 @@ const sendForgotPassMail = require('../Utils/email');
 
 //test Error handling
 router.get('/testError', asyncHandler(async (req, res, next)=>{
-
+    console.log('test error route');
     throwError(testErrorTypes.GENERAL_ERROR);
 }));
 
 //test fail handling
 router.get('/testFail', asyncHandler(async (req, res, next)=>{
+    console.log('test fail route');
     throwFail(testFailTypes.FATAL_FAIL);
 }));
 

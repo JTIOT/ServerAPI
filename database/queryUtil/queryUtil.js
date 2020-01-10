@@ -1,5 +1,6 @@
 const {
-    knex
+    knex,
+    knex175
 } = require('../database');
 const {throwError} = require('../../exceptionHandler/exceptionHandler');
 const {DB_ERROR} = require('../../exceptionHandler/errors/databaseErrors/databaseErrorTypes');
@@ -334,6 +335,69 @@ const deviceSample = (mac, time)=>{
     return queryHandler(fn);
 }
 
+const getIsOnBed = (mac)=>{
+
+    const fn = async ()=> {
+
+        const results = await knex175.select('IsOnBed')
+        .from('Bedplate2015.dbo.ProductInfo')
+        .where({DeviceName:mac});
+
+        if(results.length > 0){
+            return results[0];
+        }
+
+        return null;
+    }
+
+    return queryHandler(fn);
+}
+
+const getHeartbeatRate = (mac) => {
+
+    const fn = async ()=>{
+
+        const macStr = formatMac(mac);
+
+        const tableExist = await deviceTableExist(macStr);
+
+        if(!tableExist){
+            return null;
+        }
+
+        const results = await knex175.select('HeartbeatRate')
+        .from(`Bedplate2015.dbo.${macStr}`)
+        .orderBy('ID', 'desc')
+        .limit(1);
+
+        if(results.length > 0){
+            return results[0];
+        }
+
+        return null;
+    }
+
+    return queryHandler(fn);
+}
+
+const getDeviceStatus = (mac)=>{
+
+    const fn = async ()=> {
+
+        const results = await knex175.select('DeviceStatus')
+        .from('Bedplate2015.dbo.ProductInfo')
+        .where({DeviceName:mac});
+
+        if(results.length > 0){
+            return results[0];
+        }
+
+        return null;
+    }
+
+    return queryHandler(fn);
+}
+
 /**
  * Handle query's db error
  * Generalized db error
@@ -359,5 +423,8 @@ module.exports = {
     deviceSample,
     getUserInfoBy,
     getDeviceMacByUserKeyId,
-    deviceTableExist
+    deviceTableExist,
+    getIsOnBed,
+    getHeartbeatRate,
+    getDeviceStatus
 }

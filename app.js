@@ -7,6 +7,7 @@ const asyncHandler = require('express-async-handler');
 
 const testRoute = require('./routes/testRoute');
 const userRoute = require('./routes/userRoute');
+const deviceRoute = require('./routes/deviceRoute');
 
 //server port
 const port = process.env.PORT || 3100;
@@ -40,6 +41,9 @@ app.use('/test', testRoute);
 
 //user route
 app.use('/user', userRoute);
+
+//device route
+app.use('/device', deviceRoute);
 
 //exception handler
 app.use(ExceptionHandler);

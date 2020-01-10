@@ -3,15 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "bin": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "start-dev": "concurrently --kill-others \"nodemon app.js\" \"cd client/resetpass && npm start\""
+    "start-dev": "concurrently --kill-others \"nodemon app.js\" \"cd client/resetpass && npm start\"",
+    "deploy": "pkg app.js --debug --out-path ./deploy"
+  },
+  "pkg": {
+    "assets": "mode_modules/**/*.node"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.7",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "concurrently": "^5.0.2",
     "cors": "^2.8.5",
@@ -21,7 +26,7 @@
     "ip": "^1.1.5",
     "jsend-express": "^1.2.3",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.20.4",
+    "knex": "^0.20.7",
     "moment": "^2.24.0",
     "mssql": "^6.0.1",
     "nodemailer": "^6.4.2",
@@ -32,6 +37,7 @@
     "uniqid": "^5.2.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "pkg": "^4.4.2"
   }
 }
