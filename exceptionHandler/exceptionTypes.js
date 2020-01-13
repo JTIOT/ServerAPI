@@ -60,6 +60,7 @@ class FailException extends Exception{
         this.code = failCode;
         this.tag = failTag;
         this.message = failMsg;
+        this.payload = {};
     }
 }
 

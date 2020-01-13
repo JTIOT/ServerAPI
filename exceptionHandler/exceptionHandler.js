@@ -35,7 +35,8 @@ const failHandler = async (excp, req, res, next) => {
                 message: excp.message,
                 errors:{
                     code:excp.code,
-                    tag:excp.tag
+                    tag:excp.tag,
+                    payload: excp.payload
                 }
             }
         });
@@ -59,11 +60,12 @@ const throwError = (type) => {
  * Throw an fail exception
  * @param {*} type an instance of FailException
  */
-const throwFail = (type) => {
+const throwFail = (type, payload={}) => {
     
     if(type.type !== exceptionTypes.FAIL){
         throw new Error(`throwFail function received none fail type exception ${type}`);
     }
+    type.payload = payload;
     throw type;
 }
 
