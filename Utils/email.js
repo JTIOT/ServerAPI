@@ -20,6 +20,7 @@ const email = new Email({
 
 const sendMail = async (sender, receiver, templatePath, templateVar = {})=>{
 
+    console.log('email template ', templatePath);
     const result = await email
     .send({
       template: templatePath,

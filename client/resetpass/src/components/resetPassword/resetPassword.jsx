@@ -33,7 +33,7 @@ const ResetPassword = ({match})=>{
         if(!passErrorMsg){
             
             axios.post(
-            'http://192.168.5.137:3100/user/resetPassword',
+            'http://192.168.5.169:3100/user/resetPassword',
             {
                 userId: userId,
                 newPassword: newPassword,

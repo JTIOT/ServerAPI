@@ -3,16 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "bin": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
     "start-dev": "concurrently --kill-others \"nodemon app.js\" \"cd client/resetpass && npm start\"",
-    "deploy": "pkg app.js --debug --out-path ./deploy"
+    "deploy-server": "pkg . --debug --out-path ./deploy",
+    "deploy-client": "cd client/resetpass && npm run build",
+    "deploy": "npm run deploy-server && npm run deploy-client"
   },
   "pkg": {
-    "assets": "mode_modules/**/*.node"
+    "assets": "./emailTemplate/**/*"
   },
+  "bin": "app.js",
   "author": "",
   "license": "ISC",
   "dependencies": {
