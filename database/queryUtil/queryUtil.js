@@ -358,10 +358,15 @@ const getHeartbeatRate = (mac) => {
     const fn = async ()=>{
 
         const macStr = formatMac(mac);
-
-        const tableExist = await deviceTableExist(macStr);
+    
+        const tableResult = await knex175.select('TABLE_NAME')
+        .from('Bedplate2015.INFORMATION_SCHEMA.TABLES')
+        .where({TABLE_NAME:macStr});
+    
+        const tableExist = tableResult.length > 0? true : false;
 
         if(!tableExist){
+            console.log('get heart beat table do not exist');
             return null;
         }
 
@@ -371,9 +376,11 @@ const getHeartbeatRate = (mac) => {
         .limit(1);
 
         if(results.length > 0){
+            console.log('get heart beat ', results[0]);
             return results[0];
         }
 
+        console.log('get heart beat no result');
         return null;
     }
 
