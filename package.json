@@ -8,10 +8,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
     "start-dev": "concurrently --kill-others \"nodemon app.js\" \"cd client/resetpass && npm start\"",
-    "deploy": "pkg app.js --debug --out-path ./deploy"
+    "deploy": "pkg . --debug --out-path ./deploy"
   },
   "pkg": {
-    "assets": "mode_modules/**/*.node"
+    "assets": "emailTemplate/**/*"
   },
   "author": "",
   "license": "ISC",
