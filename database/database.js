@@ -15,7 +15,19 @@ const knex175 = require('knex')({
     }
 });
 
+const knex176 = require('knex')({
+    client: 'mssql',
+    debug: true,
+    connection: {
+      host : '60.248.43.176',
+      user : 'sa',
+      password : '62C50298',
+      database : 'master'
+    }
+});
+
 module.exports = {
     knex,
-    knex175
+    knex175,
+    knex176
 }

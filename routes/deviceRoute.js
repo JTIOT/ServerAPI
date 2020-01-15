@@ -4,14 +4,14 @@ const router = express.Router();
 const {
     getIsOnBed,
     getHeartbeatRate,
-    getDeviceStatus
+    getHeartStatus
 } = require('../database/queryUtil/queryUtil');
 
 const {
     MAC_REQUIRE,
     NO_DATA_ON_BED,
     NO_DATA_HEART_BEAT,
-    NO_DATA_DEVICE_STATUS
+    NO_DATA_HEART_STATUS
 } = require('../exceptionHandler/fails/stateFails/stateFailTypes');
 
 const {throwFail} = require('../exceptionHandler/exceptionHandler');
@@ -28,9 +28,9 @@ router.post('/getState', asyncHandler(async (req, res, next) => {
 
     const onBedResult = await getIsOnBed(mac);
     const heartbeatResult = await getHeartbeatRate(mac);
-    const deviceStatusResult = await getDeviceStatus(mac);
+    const heartStatusResult = await getHeartStatus(mac);
 
-    console.log('result ', onBedResult, heartbeatResult, deviceStatusResult);
+    console.log('result ', onBedResult, heartbeatResult);
 
     if(!onBedResult){
         throwFail(NO_DATA_ON_BED);
@@ -40,18 +40,18 @@ router.post('/getState', asyncHandler(async (req, res, next) => {
         throwFail(NO_DATA_HEART_BEAT);
     }
 
-    if(!deviceStatusResult){
-        throwFail(NO_DATA_DEVICE_STATUS);
+    if(!heartStatusResult){
+        throwFail(NO_DATA_HEART_STATUS);
     }
 
     const onBed = onBedResult.IsOnBed;
     const heartbeatRate = heartbeatResult.HeartbeatRate;
-    const deviceStatus = deviceStatusResult.DeviceStatus;
+    const heartStatus = heartStatusResult.HeartStatus;
 
     const data = {
         onBed,
         heartbeatRate,
-        deviceStatus
+        heartStatus
     }
 
     res.success({data});
