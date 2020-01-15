@@ -8,7 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
     "start-dev": "concurrently --kill-others \"nodemon app.js\" \"cd client/resetpass && npm start\"",
-    "deploy": "pkg . --debug --out-path ./deploy"
+    "deploy-server": "pkg . --debug --out-path ./deploy",
+    "deploy-client": "cd client/resetpass && npm run build",
+    "deploy": "npm run deploy-server && npm run deploy-client"
   },
   "pkg": {
     "assets": "emailTemplate/**/*"
