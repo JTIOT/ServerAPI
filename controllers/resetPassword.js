@@ -70,7 +70,7 @@ const sendResetPassMail = async (req, res, next) => {
         }
 
         await sendForgotPassMail(sender, user.email, 
-            path.join(process.cwd(), 'emailTemplate','forgotPassTemp'),
+            path.join(__dirname, '../emailTemplate/forgotPassTemp'),
             templateVar);
 
         res.success({data:{}});
