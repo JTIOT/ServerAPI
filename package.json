@@ -9,7 +9,7 @@
     "start": "nodemon app.js",
     "start-dev": "concurrently --kill-others \"nodemon app.js\" \"cd client/resetpass && npm start\"",
     "deploy-server": "pkg . --debug --out-path ./deploy",
-    "deploy-client": "cd client/resetpass && npm run build",
+    "deploy-client": "cd client/apifrontend && npm run build",
     "deploy": "npm run deploy-server && npm run deploy-client"
   },
   "pkg": {
