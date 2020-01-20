@@ -1,5 +1,6 @@
 import React,{useState, useEffect} from 'react';
 import axios from 'axios';
+import ip from 'ip';
 import classes from './resetPassword.module.scss';
 
 const ResetPassword = ({match})=>{
@@ -33,7 +34,7 @@ const ResetPassword = ({match})=>{
         if(!passErrorMsg){
             
             axios.post(
-            'http://192.168.5.137:3100/user/resetPassword',
+            `http://${ip.address()}:3100/user/resetPassword`,
             {
                 userId: userId,
                 newPassword: newPassword,
