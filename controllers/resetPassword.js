@@ -51,7 +51,7 @@ const sendResetPassMail = async (req, res, next) => {
         throwFail(USER_DO_NOT_HAVE_EMAIL);
     }
 
-    const resetPassClientUrl = `http://${ip.address()}:3000/resetPassword`
+    const resetPassClientUrl = `http://${ip.address()}:8082/resetPassword`
     
     try{
         const token = await generatToken({

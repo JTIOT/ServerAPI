@@ -34,7 +34,7 @@ const ResetPassword = ({match})=>{
         if(!passErrorMsg){
             
             axios.post(
-            `http://${ip.address()}:3100/user/resetPassword`,
+            `http://${ip.address()}:8083/user/resetPassword`,
             {
                 userId: userId,
                 newPassword: newPassword,
