@@ -1,0 +1,13 @@
+.overlay{
+    display: flex;
+    justify-content: center;
+    padding: 1% 1%;
+
+    .label{
+        margin-right: 1%;
+    }
+
+    .input{
+        outline: none;
+    }
+}

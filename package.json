@@ -8,6 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
     "start-dev": "concurrently --kill-others \"nodemon app.js\" \"cd client/resetpass && npm start\"",
+    "start-client-dev": "cd client/apifrontend && npm start",
     "deploy-server": "pkg . --debug --out-path ./deploy",
     "deploy-client": "cd client/apifrontend && rm -rf ./build && npm run build",
     "deploy": "npm run deploy-server && npm run deploy-client"
