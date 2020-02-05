@@ -30,7 +30,7 @@ router.post('/getState', asyncHandler(async (req, res, next) => {
     const heartbeatResult = await getHeartbeatRate(mac);
     const heartStatusResult = await getHeartStatus(mac);
 
-    console.log('result ', onBedResult, heartbeatResult);
+    console.log('result ', onBedResult, heartbeatResult, heartStatusResult);
 
     if(!onBedResult){
         throwFail(NO_DATA_ON_BED);
