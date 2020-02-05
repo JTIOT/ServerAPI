@@ -13,7 +13,7 @@ const dbConfig = {
   client: 'mssql',
   debug: true,
   connection: {
-    host : '192.168.5.169',
+    host : '192.168.5.1',
     user : 'sa',
     password : 'jtiot!@#1208',
     database : 'master'
