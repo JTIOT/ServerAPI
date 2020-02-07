@@ -4,6 +4,7 @@ import QRCodeReader from './pages/qr-reader/qr-reader';
 import ResetPassword from './pages/resetPassword/resetPassword';
 import DeviceDispatch from './pages/device-dispatch/deviceDispatch';
 import './App.css';
+import 'semantic-ui-css/semantic.min.css'
 
 function App() {
   return (
