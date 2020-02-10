@@ -1,6 +1,6 @@
 import React, {useState, createContext, createRef} from 'react';
 import {action} from '@storybook/addon-actions';
-import {Visibility, Menu, Sticky} from 'semantic-ui-react';
+import {Visibility, Menu, Sticky, Header} from 'semantic-ui-react';
 
 export default {
     title:'Sticky menu',
@@ -86,13 +86,14 @@ export const MenuTop = () => {
     return (
         <div style={{display:'flex', justifyContent:'center'}}>
             <div ref={contextRef} style={{width:'50%', textAlign:'center'}}>
+                <Header style={{fontSize:'3em'}}>Sticky to top</Header>
                 <Visibility
-                onBottomPassed={()=>setFixedMenu(true)}
+                onTopPassed={()=>setFixedMenu(true)}
                 onTopPassedReverse={()=>setFixedMenu(false)}
                 once={false}
                 >
                     <Sticky context={contextRef} active={fixedMenu}>
-                        <Menu style={{letterSpacing:'0.3em', transition:'all 3.5s'}}>
+                        <Menu style={{letterSpacing:'0.3em'}}>
                             <Menu.Item as='a' content='M1' />
                             <Menu.Item link content='M2' />
                             <Menu.Item link content='M2' />
