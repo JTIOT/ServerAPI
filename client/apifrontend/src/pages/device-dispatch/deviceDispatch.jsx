@@ -1,7 +1,8 @@
 import React from 'react'
 // import Dropdown from '../../components/dropdown/dropdown';
 import {Dropdown, Segment, Header} from 'semantic-ui-react';
-import InputField from '../../components/inputField/inputField';
+// import InputField from '../../components/inputField/inputField';
+
 
 import classes from './deviceDispatch.module.scss';
 
@@ -84,8 +85,10 @@ const recipientOptions = [
 const DeviceDispatch = () => {
 
     return (
-        
-        <Segment.Group compact raised>
+        <Segment.Group
+        className={classes.margin}
+         compact 
+         raised>
             <Segment>
                 <Header 
                 icon='exchange' 
