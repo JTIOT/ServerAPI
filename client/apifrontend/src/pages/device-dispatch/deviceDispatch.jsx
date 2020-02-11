@@ -1,88 +1,80 @@
-import React from 'react'
+import React, {useState} from 'react';
+import faker from 'faker';
 // import Dropdown from '../../components/dropdown/dropdown';
 import {Dropdown, Segment, Header} from 'semantic-ui-react';
 // import InputField from '../../components/inputField/inputField';
-
+import Item from '../../components/Item/Item';
 
 import classes from './deviceDispatch.module.scss';
 
-const modelOptions = [
-    {
-        text:'Model 1',
-        value:'Model1'
-    },
-    {
-        text:'Model 2',
-        value:'Model2'
-    },
-    {
-        text:'Model 3',
-        value:'Model3'
-    },
-    {
-        text:'Model 4',
-        value:'Model4'
-    },
-]
+const modelOptions = () => {
+    let models = [];
+    for(let i=0; i<4; i++){
+        const model = faker.commerce.productName();
+        models.push({
+            text:model,
+            value:model
+        })
+    }
+    return models;
+}
 
-const typeOptions = [
-    {
-        text:'Type 1',
-        value:'Type1'
-    },
-    {
-        text:'Type 2',
-        value:'Type2'
-    },
-    {
-        text:'Type 3',
-        value:'Type3'
-    },
-    {
-        text:'Type 4',
-        value:'Type4'
-    },
-]
+const typeOptions = () => {
 
-const companyOptions = [
-    {
-        text:'Company 1',
-        value:'Company1'
-    },
-    {
-        text:'Company 2',
-        value:'Company2'
-    },
-    {
-        text:'Company 3',
-        value:'Company3'
-    },
-    {
-        text:'Company 4',
-        value:'Company4'
-    },
-]
+    let types = [];
+    for(let i=0; i<4; i++){
+        const type = faker.commerce.productMaterial();
+        types.push({
+            text:type,
+            value:type
+        })
+    }
+    return types;
+}
 
-const recipientOptions = [
-    {
-        text:'Recipient 1',
-        value:'Recipient1'
-    },
-    {
-        text:'Recipient 2',
-        value:'Recipient2'
-    },
-    {
-        text:'Recipient 3',
-        value:'Recipient3'
-    },
-    {
-        text:'Recipient 4',
-        value:'Recipient4'
-    },
-]
+const companyOptions = () => {
+
+    let companys = [];
+    for(let i=0; i<4; i++){
+        const company = faker.company.companyName();
+        companys.push({
+            text:company,
+            value:company
+        })
+    }
+    return companys;
+
+}
+
+const getItems = () => {
+
+    let items = [];
+    for(let i=0; i<4; i++){
+        const item = faker.company.companyName();
+        items.push({
+            text:item,
+            value:item
+        })
+    }
+    return items;
+
+}
 
 const DeviceDispatch = () => {
+
+    // const [items, setItems] = useState(getItems());
+
+    // const handleItemDelete = (index, name) => {
+
+    //     console.log('delete item at ', index, name);
+    // }
+
+    // const renderItems = () => {
+
+    //     return items.map((item, index)=>{
+    //         return <Item key={index} name={item.text} onDelete={handleItemDelete} />
+    //     });
+    // }
 
     return (
         <Segment.Group
@@ -104,7 +96,7 @@ const DeviceDispatch = () => {
                 search
                 button
                 noResultsMessage='No model found'
-                options={modelOptions}
+                options={modelOptions()}
                 onChange={(e, {value})=>console.log('selected model ', value)}
                 />
             </Segment>
@@ -115,7 +107,7 @@ const DeviceDispatch = () => {
                 button
                 selection
                 noResultsMessage='No type found'
-                options={typeOptions}
+                options={typeOptions()}
                 onChange={(e, {value})=>console.log('selected type ', value)}
                 />
             </Segment>
@@ -126,7 +118,7 @@ const DeviceDispatch = () => {
                 button
                 selection
                 noResultsMessage='No company ID found'
-                options={companyOptions}
+                options={companyOptions()}
                 onChange={(e, {value})=>console.log('selected company id ', value)}
                 />
             </Segment>
@@ -137,10 +129,23 @@ const DeviceDispatch = () => {
                 button
                 selection
                 noResultsMessage='No recipient id found'
-                options={recipientOptions}
+                options={companyOptions()}
                 onChange={(e, {value})=>console.log('selected recipient id ', value)}
                 />
             </Segment>
+            {
+                //Device scanned section
+            }
+            <Segment>
+                <Header
+                color='purple'
+                content='Devices' 
+                subheader='Scanned devices'  
+                />
+            </Segment>
+            <Segment.Group>
+                
+            </Segment.Group>
         </Segment.Group>
     );
 }
