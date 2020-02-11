@@ -1,30 +1,39 @@
-import React from 'react';
-import {Segment, Popup, Button, Dropdown} from 'semantic-ui-react';
+import React, {useState} from 'react';
+import {Segment, Popup, Button, Menu} from 'semantic-ui-react';
 
-const Item = ({key, name, onDelete}) => {
+const Item = ({name, dataKey, onDelete, ...rest}) => {
 
-    console.log(key, name);
+    const [active, setActive] = useState(false);
 
-    const handleDelete = (e, data) => {
+    const handleDelete = () => {
+
+        setActive(false);
 
         if(onDelete){
-            onDelete(key, name);
+            onDelete(dataKey, name);
         }
     }
 
     return(
-        <Segment textAlign='left'>
-            <Popup trigger={<Button content={name} />} hoverable>
-                <Dropdown.Menu>
-                    <Dropdown.Item>
-                        <Button 
-                        icon='delete' 
-                        content='Delete' 
-                        color='red' 
-                        onClick={handleDelete}
-                        />
-                    </Dropdown.Item>
-                </Dropdown.Menu>
+        <Segment basic textAlign='center'>
+            <Popup 
+            trigger={<Button content={name} />} 
+            hoverable 
+            hideOnScroll
+            open={active}
+            on='hover'
+            onOpen={()=>setActive(true)}
+            onClose={()=>setActive(false)}
+            >
+                
+                <Menu.Item content={
+                    <Button 
+                    color='red' 
+                    content='Delete'
+                    onClick={()=>handleDelete()}
+                     />
+                } />
+                
             </Popup>
         </Segment>
     );

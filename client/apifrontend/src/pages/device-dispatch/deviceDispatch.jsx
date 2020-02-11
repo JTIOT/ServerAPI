@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import faker from 'faker';
 // import Dropdown from '../../components/dropdown/dropdown';
-import {Dropdown, Segment, Header} from 'semantic-ui-react';
+import {Dropdown, Segment, Header, Grid} from 'semantic-ui-react';
 // import InputField from '../../components/inputField/inputField';
 import Item from '../../components/Item/Item';
 
@@ -12,6 +12,7 @@ const modelOptions = () => {
     for(let i=0; i<4; i++){
         const model = faker.commerce.productName();
         models.push({
+            key:i,
             text:model,
             value:model
         })
@@ -25,6 +26,7 @@ const typeOptions = () => {
     for(let i=0; i<4; i++){
         const type = faker.commerce.productMaterial();
         types.push({
+            key:i,
             text:type,
             value:type
         })
@@ -38,6 +40,7 @@ const companyOptions = () => {
     for(let i=0; i<4; i++){
         const company = faker.company.companyName();
         companys.push({
+            key:i,
             text:company,
             value:company
         })
@@ -46,12 +49,13 @@ const companyOptions = () => {
 
 }
 
-const getItems = () => {
+const getDevices = () => {
 
     let items = [];
     for(let i=0; i<4; i++){
         const item = faker.company.companyName();
         items.push({
+            key:i,
             text:item,
             value:item
         })
@@ -60,93 +64,110 @@ const getItems = () => {
 
 }
 
+
+
 const DeviceDispatch = () => {
 
-    // const [items, setItems] = useState(getItems());
+    const [items, setItems] = useState(getDevices());
 
-    // const handleItemDelete = (index, name) => {
+    const handleItemDelete = (dataKey, name) => {
 
-    //     console.log('delete item at ', index, name);
-    // }
-
-    // const renderItems = () => {
-
-    //     return items.map((item, index)=>{
-    //         return <Item key={index} name={item.text} onDelete={handleItemDelete} />
-    //     });
-    // }
+        items.splice(dataKey, 1);
+        setItems([...items]);
+    }
+    
+    const renderItems = () => {
+    
+        return items.map((item, index)=>{
+            return <Item 
+            key={index} 
+            dataKey={index} 
+            name={item.text} 
+            onDelete={handleItemDelete} 
+            />
+        });
+    }
 
     return (
-        <Segment.Group
-        className={classes.margin}
-         compact 
-         raised>
-            <Segment>
-                <Header 
-                icon='exchange' 
-                color='purple'
-                content='Dispatch System' 
-                subheader='Manage your dispatch' 
-                />
-            </Segment>
-            <Segment>
-                <Dropdown 
-                placeholder='Select Model'
-                selection
-                search
-                button
-                noResultsMessage='No model found'
-                options={modelOptions()}
-                onChange={(e, {value})=>console.log('selected model ', value)}
-                />
-            </Segment>
-            <Segment>
-                <Dropdown
-                placeholder='Select Type'
-                search
-                button
-                selection
-                noResultsMessage='No type found'
-                options={typeOptions()}
-                onChange={(e, {value})=>console.log('selected type ', value)}
-                />
-            </Segment>
-            <Segment>
-                <Dropdown
-                placeholder='Select Company ID'
-                search
-                button
-                selection
-                noResultsMessage='No company ID found'
-                options={companyOptions()}
-                onChange={(e, {value})=>console.log('selected company id ', value)}
-                />
-            </Segment>
-            <Segment>
-                <Dropdown
-                placeholder='Select Recipient ID'
-                search
-                button
-                selection
-                noResultsMessage='No recipient id found'
-                options={companyOptions()}
-                onChange={(e, {value})=>console.log('selected recipient id ', value)}
-                />
-            </Segment>
-            {
-                //Device scanned section
-            }
-            <Segment>
-                <Header
-                color='purple'
-                content='Devices' 
-                subheader='Scanned devices'  
-                />
-            </Segment>
-            <Segment.Group>
-                
-            </Segment.Group>
-        </Segment.Group>
+        <div className={classes.overlay}>
+            <div className={classes.content}>
+                {
+                    //dropdown menu
+                }
+                <Segment.Group className={classes.selection}>
+                    <Segment>
+                        <Header 
+                        icon='exchange' 
+                        color='purple'
+                        content='Dispatch System' 
+                        subheader='Manage your dispatch' 
+                        />
+                    </Segment>
+                    <Segment
+                        content={<Dropdown 
+                        placeholder='Select Model'
+                        selection
+                        search
+                        button
+                        noResultsMessage='No model found'
+                        options={modelOptions()}
+                        onChange={(e, {value})=>console.log('selected model ', value)}
+                        />}
+                    />
+                    <Segment
+                        content={<Dropdown
+                        placeholder='Select Type'
+                        search
+                        button
+                        selection
+                        noResultsMessage='No type found'
+                        options={typeOptions()}
+                        onChange={(e, {value})=>console.log('selected type ', value)}
+                        />}
+                    />
+                    <Segment
+                        content={<Dropdown
+                        placeholder='Select Company ID'
+                        search
+                        button
+                        selection
+                        noResultsMessage='No company ID found'
+                        options={companyOptions()}
+                        onChange={(e, {value})=>console.log('selected company id ', value)}
+                        />}
+                    />
+                    <Segment
+                        content={<Dropdown
+                        placeholder='Select Recipient ID'
+                        search
+                        button
+                        selection
+                        noResultsMessage='No recipient id found'
+                        options={companyOptions()}
+                        onChange={(e, {value})=>console.log('selected recipient id ', value)}
+                        />}
+                    />
+                </Segment.Group>
+                {
+                    //scanned device list
+                }
+                <Segment.Group className={classes.deviceList}>
+                    <Segment>
+                        <Header
+                        color='purple'
+                        content='Devices' 
+                        subheader='Scanned devices'  
+                        />
+                    </Segment>
+                    <Segment className={classes.itemGroup}>
+                    {
+                        renderItems()
+                    }
+                    </Segment>
+                </Segment.Group>
+                            
+            </div>            
+        </div>
     );
 }
 
