@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import faker from 'faker';
 // import Dropdown from '../../components/dropdown/dropdown';
-import {Dropdown, Segment, Header, Grid, Button} from 'semantic-ui-react';
+import {Dropdown, Segment, Header, Button} from 'semantic-ui-react';
 // import InputField from '../../components/inputField/inputField';
 import Item from '../../components/Item/Item';
 
@@ -14,7 +14,8 @@ const modelOptions = () => {
         models.push({
             key:i,
             text:model,
-            value:model
+            value:model,
+            category:'model'
         })
     }
     return models;
@@ -28,7 +29,8 @@ const typeOptions = () => {
         types.push({
             key:i,
             text:type,
-            value:type
+            value:type,
+            category:'type'
         })
     }
     return types;
@@ -37,23 +39,40 @@ const typeOptions = () => {
 const companyOptions = () => {
 
     let companys = [];
-    for(let i=0; i<4; i++){
+    for(let i=0; i<7; i++){
         const company = faker.company.companyName();
         companys.push({
             key:i,
             text:company,
-            value:company
+            value:company,
+            category:'company'
         })
     }
     return companys;
 
 }
 
+const recipientOptions = () => {
+
+    let recipients = [];
+    for(let i=0; i<5; i++){
+        const recipient = faker.company.companyName();
+        recipients.push({
+            key:i,
+            text:recipient,
+            value:recipient,
+            category:'recipient'
+        })
+    }
+    return recipients;
+
+}
+
 const getDevices = () => {
 
     let items = [];
-    for(let i=0; i<10; i++){
-        const item = faker.company.companyName();
+    for(let i=0; i<4; i++){
+        const item = faker.finance.mask(10);
         items.push({
             key:i,
             text:item,
@@ -64,57 +83,91 @@ const getDevices = () => {
 
 }
 
+const initData = {
+    model:null,
+    type:null,
+    company:null,
+    recipient:null
+}
 
+const dropdownData = [
+    {
+        category:'model',
+        placeholder:'Select Model',
+        noResultsMessage:'No model found',
+        options:modelOptions(),
+    },
+    {
+        category:'type',
+        placeholder:'Select Type',
+        noResultsMessage:'No type found',
+        options:typeOptions(),
+    },
+    {
+        category:'company',
+        placeholder:'Select Company',
+        noResultsMessage:'No company found',
+        options:companyOptions(),
+    },
+    {
+        category:'recipient',
+        placeholder:'Select Recipient',
+        noResultsMessage:'No recipient found',
+        options:recipientOptions(),
+    }
+]
 
 const DeviceDispatch = () => {
 
-    const models = modelOptions();
     const [items, setItems] = useState(getDevices());
-    const [selectedModel, setSelectedModel] = useState(null);
-    const [selectedType, setSelectedType] = useState(null);
-    const [selectedCompany, setSelectedCompany] = useState(null);
-    const [selectedRecipient, setSelectedRecipient] = useState(null);
+    const [data, setData] = useState(initData);
 
-    const handleModelChange = (e, data) => {
-        const selectModel =data.options.find(e=>e.value===data.value);
-        setSelectedModel(selectModel);
-    }
-
-    const handleTypeChange = (e, data)=>{
-        const selectType =data.options.find(e=>e.value===data.value);
-        setSelectedType(selectType);
-    }
-
-    const handleCompanyChange = (e, data)=>{
-        const selectCompany =data.options.find(e=>e.value===data.value);
-        setSelectedCompany(selectCompany);
-    }
-
-    const handleRecipientChange = (e, data)=>{
-        const selectRecipient =data.options.find(e=>e.value===data.value);
-        setSelectedRecipient(selectRecipient);
-    }
-
-    const handleItemDelete = (dataKey, name) => {
-
-        console.log('Delete item',items.splice(dataKey, 1));
-        setItems([...items]);
+    const handleDataChange = (e, prop) => {
+        const selectedData = prop.options.find(e=>e.value===prop.value);
+        setData({...data, [selectedData.category]:selectedData})
     }
 
     const handleOutput = ()=>{
-        console.log(selectedModel, selectedType, selectedCompany, selectedRecipient);
+        console.log(data);
     }
     
+    const handleItemDelete = (dataIndex) => {
+
+        console.log('Delete item',items.splice(dataIndex, 1));
+        setItems([...items]);
+    }
+
     const renderItems = () => {
     
         return items.map((item, index)=>{
             return <Item 
             key={index} 
-            dataKey={index} 
-            name={item.text} 
+            dataIndex={index} 
+            title={item.text} 
             onDelete={handleItemDelete} 
             />
         });
+    }
+
+    const renderDropdownlist = () => {
+
+        return dropdownData.map((element, index)=>{
+            return <Segment
+                    key={index}
+                    content={<Dropdown 
+                    placeholder={element.placeholder}
+                    selection
+                    search
+                    button
+                    noResultsMessage={element.noResultsMessage}
+                    options={element.options}
+                    value={data[element.category]?data[element.category].value:initData[element.category]}
+                    text={data[element.category]?data[element.category].text:null}
+                    onChange={handleDataChange}
+                    error={data[element.category]?false:true}
+                    />}
+                />
+        })
     }
 
     return (
@@ -139,61 +192,12 @@ const DeviceDispatch = () => {
                         icon='cog' 
                         color='purple'
                         content='Management' 
-                        subheader='Manage your dispatch' 
+                        subheader='Manage your delivery' 
                         />
                     </Segment>
-                    <Segment
-                        content={<Dropdown 
-                        placeholder='Select Model'
-                        selection
-                        search
-                        button
-                        noResultsMessage='No model found'
-                        options={models}
-                        defaultValue={selectedModel?selectedModel.value:null}
-                        text={selectedModel?selectedModel.text:null}
-                        onChange={handleModelChange}
-                        />}
-                    />
-                    <Segment
-                        content={<Dropdown
-                        placeholder='Select Type'
-                        search
-                        button
-                        selection
-                        noResultsMessage='No type found'
-                        options={typeOptions()}
-                        defaultValue={selectedType?selectedType.value:null}
-                        text={selectedType?selectedType.text:null}
-                        onChange={handleTypeChange}
-                        />}
-                    />
-                    <Segment
-                        content={<Dropdown
-                        placeholder='Select Company ID'
-                        search
-                        button
-                        selection
-                        noResultsMessage='No company ID found'
-                        options={companyOptions()}
-                        defaultValue={selectedCompany?selectedCompany.value:null}
-                        text={selectedCompany?selectedCompany.text:null}
-                        onChange={handleCompanyChange}
-                        />}
-                    />
-                    <Segment
-                        content={<Dropdown
-                        placeholder='Select Recipient ID'
-                        search
-                        button
-                        selection
-                        noResultsMessage='No recipient id found'
-                        options={companyOptions()}
-                        defaultValue={selectedRecipient?selectedRecipient.value:null}
-                        text={selectedRecipient?selectedRecipient.text:null}
-                        onChange={handleRecipientChange}
-                        />}
-                    />
+                {   
+                    renderDropdownlist()
+                }
                 </Segment.Group>
                 {
                     //scanned device list
@@ -209,11 +213,18 @@ const DeviceDispatch = () => {
                         subheader='Scanned devices'  
                         />
                     </Segment>
+                    {
+                    items!==null && items.length>0?
                     <Segment className={classes.itemGroup}>
                     {
                         renderItems()
                     }
                     </Segment>
+                    :
+                    <Segment placeholder>
+                        <Header color='red' content='There is no device. Scan your deivce to start' />
+                    </Segment>
+                    }
                 </Segment.Group>
             </div>    
             <Button content='Output' onClick={handleOutput} />        
