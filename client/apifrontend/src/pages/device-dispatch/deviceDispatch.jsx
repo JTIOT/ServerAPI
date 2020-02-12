@@ -195,9 +195,9 @@ const DeviceDispatch = () => {
                         subheader='Manage your delivery' 
                         />
                     </Segment>
-                {   
-                    renderDropdownlist()
-                }
+                    {   
+                        renderDropdownlist()
+                    }
                 </Segment.Group>
                 {
                     //scanned device list
@@ -228,7 +228,7 @@ const DeviceDispatch = () => {
                     }
                 </Segment.Group>
             </div>    
-            <Button content='Output' onClick={handleOutput} />        
+            <Button primary content='Output' onClick={handleOutput} />        
         </div>
     );
 }
