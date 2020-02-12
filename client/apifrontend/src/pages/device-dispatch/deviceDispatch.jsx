@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import faker from 'faker';
 // import Dropdown from '../../components/dropdown/dropdown';
-import {Dropdown, Segment, Header, Grid} from 'semantic-ui-react';
+import {Dropdown, Segment, Header, Grid, Button} from 'semantic-ui-react';
 // import InputField from '../../components/inputField/inputField';
 import Item from '../../components/Item/Item';
 
@@ -9,7 +9,7 @@ import classes from './deviceDispatch.module.scss';
 
 const modelOptions = () => {
     let models = [];
-    for(let i=0; i<4; i++){
+    for(let i=1; i<8; i++){
         const model = faker.commerce.productName();
         models.push({
             key:i,
@@ -23,7 +23,7 @@ const modelOptions = () => {
 const typeOptions = () => {
 
     let types = [];
-    for(let i=0; i<4; i++){
+    for(let i=0; i<8; i++){
         const type = faker.commerce.productMaterial();
         types.push({
             key:i,
@@ -52,7 +52,7 @@ const companyOptions = () => {
 const getDevices = () => {
 
     let items = [];
-    for(let i=0; i<4; i++){
+    for(let i=0; i<10; i++){
         const item = faker.company.companyName();
         items.push({
             key:i,
@@ -68,12 +68,41 @@ const getDevices = () => {
 
 const DeviceDispatch = () => {
 
+    const models = modelOptions();
     const [items, setItems] = useState(getDevices());
+    const [selectedModel, setSelectedModel] = useState(null);
+    const [selectedType, setSelectedType] = useState(null);
+    const [selectedCompany, setSelectedCompany] = useState(null);
+    const [selectedRecipient, setSelectedRecipient] = useState(null);
+
+    const handleModelChange = (e, data) => {
+        const selectModel =data.options.find(e=>e.value===data.value);
+        setSelectedModel(selectModel);
+    }
+
+    const handleTypeChange = (e, data)=>{
+        const selectType =data.options.find(e=>e.value===data.value);
+        setSelectedType(selectType);
+    }
+
+    const handleCompanyChange = (e, data)=>{
+        const selectCompany =data.options.find(e=>e.value===data.value);
+        setSelectedCompany(selectCompany);
+    }
+
+    const handleRecipientChange = (e, data)=>{
+        const selectRecipient =data.options.find(e=>e.value===data.value);
+        setSelectedRecipient(selectRecipient);
+    }
 
     const handleItemDelete = (dataKey, name) => {
 
-        items.splice(dataKey, 1);
+        console.log('Delete item',items.splice(dataKey, 1));
         setItems([...items]);
+    }
+
+    const handleOutput = ()=>{
+        console.log(selectedModel, selectedType, selectedCompany, selectedRecipient);
     }
     
     const renderItems = () => {
@@ -90,16 +119,26 @@ const DeviceDispatch = () => {
 
     return (
         <div className={classes.overlay}>
+            <Header 
+            icon='exchange' 
+            color='purple'
+            content='Dispatch management' 
+            subheader='Manage your dispatch' 
+            size='large'
+            />
             <div className={classes.content}>
                 {
                     //dropdown menu
                 }
-                <Segment.Group className={classes.selection}>
+                <Segment.Group 
+                className={classes.selection}
+                compact
+                >
                     <Segment>
                         <Header 
-                        icon='exchange' 
+                        icon='cog' 
                         color='purple'
-                        content='Dispatch System' 
+                        content='Management' 
                         subheader='Manage your dispatch' 
                         />
                     </Segment>
@@ -110,8 +149,10 @@ const DeviceDispatch = () => {
                         search
                         button
                         noResultsMessage='No model found'
-                        options={modelOptions()}
-                        onChange={(e, {value})=>console.log('selected model ', value)}
+                        options={models}
+                        defaultValue={selectedModel?selectedModel.value:null}
+                        text={selectedModel?selectedModel.text:null}
+                        onChange={handleModelChange}
                         />}
                     />
                     <Segment
@@ -122,7 +163,9 @@ const DeviceDispatch = () => {
                         selection
                         noResultsMessage='No type found'
                         options={typeOptions()}
-                        onChange={(e, {value})=>console.log('selected type ', value)}
+                        defaultValue={selectedType?selectedType.value:null}
+                        text={selectedType?selectedType.text:null}
+                        onChange={handleTypeChange}
                         />}
                     />
                     <Segment
@@ -133,7 +176,9 @@ const DeviceDispatch = () => {
                         selection
                         noResultsMessage='No company ID found'
                         options={companyOptions()}
-                        onChange={(e, {value})=>console.log('selected company id ', value)}
+                        defaultValue={selectedCompany?selectedCompany.value:null}
+                        text={selectedCompany?selectedCompany.text:null}
+                        onChange={handleCompanyChange}
                         />}
                     />
                     <Segment
@@ -144,14 +189,19 @@ const DeviceDispatch = () => {
                         selection
                         noResultsMessage='No recipient id found'
                         options={companyOptions()}
-                        onChange={(e, {value})=>console.log('selected recipient id ', value)}
+                        defaultValue={selectedRecipient?selectedRecipient.value:null}
+                        text={selectedRecipient?selectedRecipient.text:null}
+                        onChange={handleRecipientChange}
                         />}
                     />
                 </Segment.Group>
                 {
                     //scanned device list
                 }
-                <Segment.Group className={classes.deviceList}>
+                <Segment.Group 
+                className={classes.deviceList}
+                compact
+                >
                     <Segment>
                         <Header
                         color='purple'
@@ -165,8 +215,8 @@ const DeviceDispatch = () => {
                     }
                     </Segment>
                 </Segment.Group>
-                            
-            </div>            
+            </div>    
+            <Button content='Output' onClick={handleOutput} />        
         </div>
     );
 }

@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {Segment, Popup, Button, Menu} from 'semantic-ui-react';
 
+import classes from './Item.module.scss';
+
 const Item = ({name, dataKey, onDelete, ...rest}) => {
 
     const [active, setActive] = useState(false);
@@ -15,9 +17,9 @@ const Item = ({name, dataKey, onDelete, ...rest}) => {
     }
 
     return(
-        <Segment basic textAlign='center'>
+        <Segment className={classes.overlay} basic textAlign='center'>
             <Popup 
-            trigger={<Button content={name} />} 
+            trigger={<Button basic color='black' content={name} />} 
             hoverable 
             hideOnScroll
             open={active}

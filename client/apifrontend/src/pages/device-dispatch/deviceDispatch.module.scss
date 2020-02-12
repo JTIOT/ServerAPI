@@ -1,6 +1,7 @@
 .overlay{
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 
@@ -10,17 +11,18 @@
         align-items: flex-start;
 
         .selection{
-            margin: 0% 0% 3%;
-            padding-right: 3%;
+            margin: 0% 0% 3% !important;
         }
-
+        
         .deviceList{
-            margin: 0% 3% 0%;
+            margin: 0% 3% 0% !important;
+        }
+
+        .itemGroup{
+            overflow: auto !important;
+            max-height: 20em !important;
         }
     }
 
-    .itemGroup{
-        overflow: auto;
-        max-height: 20em;
-    }
+    
 }
