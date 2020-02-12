@@ -208,6 +208,7 @@ const DeviceDispatch = () => {
                 >
                     <Segment>
                         <Header
+                        icon='tablet'
                         color='purple'
                         content='Devices' 
                         subheader='Scanned devices'  
