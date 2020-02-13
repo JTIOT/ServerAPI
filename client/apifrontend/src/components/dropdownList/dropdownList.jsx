@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dropdown, Segment, Header} from 'semantic-ui-react';
+import {Dropdown, Segment} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 const DropdownList = ({

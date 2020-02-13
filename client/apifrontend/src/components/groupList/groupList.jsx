@@ -33,4 +33,11 @@ const GroupList = ({
     );
 }
 
+GroupList.propTypes={
+    header: PropTypes.string,
+    headerAlign: PropTypes.string,
+    subheader: PropTypes.string,
+    headerColor: PropTypes.string
+}
+
 export default GroupList;

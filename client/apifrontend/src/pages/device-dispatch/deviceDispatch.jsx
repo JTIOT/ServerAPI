@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import faker from 'faker';
-// import Dropdown from '../../components/dropdown/dropdown';
-import {Dropdown, Segment, Header, Button} from 'semantic-ui-react';
-// import InputField from '../../components/inputField/inputField';
+import {Segment, Header, Button} from 'semantic-ui-react';
 import Item from '../../components/Item/Item';
 import DropdownList from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
@@ -17,7 +15,6 @@ const modelOptions = () => {
             key:i,
             text:model,
             value:model,
-            // category:'model'
         })
     }
     return models;
@@ -32,7 +29,6 @@ const typeOptions = () => {
             key:i,
             text:type,
             value:type,
-            // category:'type'
         })
     }
     return types;
@@ -47,7 +43,6 @@ const companyOptions = () => {
             key:i,
             text:company,
             value:company,
-            // category:'company'
         })
     }
     return companys;

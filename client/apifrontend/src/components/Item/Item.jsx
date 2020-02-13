@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Segment, Popup, Button, Menu, Rail} from 'semantic-ui-react';
+import {Segment, Popup, Button, Menu} from 'semantic-ui-react';
 
 import classes from './Item.module.scss';
 
