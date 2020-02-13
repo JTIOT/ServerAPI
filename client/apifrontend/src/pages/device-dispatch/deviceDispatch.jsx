@@ -5,6 +5,7 @@ import {Dropdown, Segment, Header, Button} from 'semantic-ui-react';
 // import InputField from '../../components/inputField/inputField';
 import Item from '../../components/Item/Item';
 import DropdownList from '../../components/dropdownList/dropdownList';
+import GroupList from '../../components/groupList/groupList';
 
 import classes from './deviceDispatch.module.scss';
 
@@ -131,7 +132,7 @@ const DeviceDispatch = () => {
     }
 
     const handleOutput = ()=>{
-        console.log(data);
+        console.log(data, items);
     }
     
     const handleItemDelete = (dataIndex) => {
@@ -165,44 +166,44 @@ const DeviceDispatch = () => {
                 {
                     //dropdown menu
                 }
-                <DropdownList 
-                header='Management' 
-                subheader='Manage your delivery' 
-                headerColor='purple'
+                <GroupList
+                className={classes.selection}
+                header='Management'
+                subheader='Manage your delivery'
                 headerIcon='cog'
-                dropdownData={dropdownData}
-                onShowText={category=>data[category]?data[category].text:null}
-                onShowError={category=>data[category]?false:true}
-                onValueChange={handleValueChange}
-                />
+                headerAlign='left'
+                >
+                    <DropdownList 
+                    dropdownData={dropdownData}
+                    onShowText={category=>data[category]?data[category].text:null}
+                    onShowError={category=>data[category]?false:true}
+                    onValueChange={handleValueChange}
+                    />
+                </GroupList>
                 {
                     //scanned device list
                 }
-                <Segment.Group 
+                <GroupList
                 className={classes.deviceList}
-                compact
+                header='Devices'
+                subheader='Scanned devices'
+                headerIcon='tablet'
+                headerAlign='left'
+                headerColor='purple'
                 >
-                    <Segment>
-                        <Header
-                        icon='tablet'
-                        color='purple'
-                        content='Devices' 
-                        subheader='Scanned devices'  
-                        />
-                    </Segment>
                     {
-                    items!==null && items.length>0?
-                    <Segment className={classes.itemGroup}>
-                    {
-                        renderItems()
+                        items!==null && items.length>0?
+                        <Segment className={classes.itemGroup}>
+                        {
+                            renderItems()
+                        }
+                        </Segment>
+                        :
+                        <Segment placeholder>
+                            <Header color='red' content='There is no device. Scan your deivce to start' />
+                        </Segment>
                     }
-                    </Segment>
-                    :
-                    <Segment placeholder>
-                        <Header color='red' content='There is no device. Scan your deivce to start' />
-                    </Segment>
-                    }
-                </Segment.Group>
+                </GroupList>
             </div>    
             <Button primary content='Output' onClick={handleOutput} />        
         </div>

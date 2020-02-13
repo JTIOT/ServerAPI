@@ -1,8 +1,9 @@
 import React,{useState} from 'react';
 import {action} from '@storybook/addon-actions';
-import {Dropdown, Button} from 'semantic-ui-react';
+import {Dropdown, Button, Segment} from 'semantic-ui-react';
 import faker from 'faker';
 import DropdownList from'../components/dropdownList/dropdownList';
+import GroupList from '../components/groupList/groupList';
 
 
 export default{
@@ -151,13 +152,21 @@ export const SemanticDropdown = () => {
 
     return (
         <div>
-            <DropdownList 
-            dropdownData={dropdownData}
-            onShowText={category=>data[category]?data[category].text:null}
-            onShowError={category=>data[category]?false:true}
-            onValueChange={handleValueChange}
-            />
-            <Button content='output' onClick={()=>console.log(data)} />
+            <GroupList
+            header='Header'
+            subheader='sub header'
+            headerIcon='cog'
+            headerAlign='left'>
+                <DropdownList 
+                dropdownData={dropdownData}
+                onShowText={category=>data[category]?data[category].text:null}
+                onShowError={category=>data[category]?false:true}
+                onValueChange={handleValueChange}
+                />
+                <Segment>
+                    <Button content='output' onClick={()=>console.log(data)} />
+                </Segment>
+            </GroupList>
         </div>
     );
 }

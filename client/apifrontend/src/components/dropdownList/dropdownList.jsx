@@ -3,10 +3,6 @@ import {Dropdown, Segment, Header} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 const DropdownList = ({
-    header='Dropdown title', 
-    subheader='Dropdown subtitle', 
-    headerIcon='cog', 
-    headerColor='purple',
     dropdownData,
     onValueChange,
     onShowError,
@@ -48,27 +44,17 @@ const DropdownList = ({
                 />
         })
     }
-
-    return(
-        <Segment.Group 
-        compact
-        >
-            <Segment>
-                <Header 
-                icon={headerIcon} 
-                color={headerColor}
-                content={header} 
-                subheader={subheader} 
-                />
-            </Segment>
-            {   
+    return (
+        <React.Fragment>
+            {
                 renderDropdownlist()
             }
-        </Segment.Group>
+        </React.Fragment>
     );
 }
 
 DropdownList.propTypes={
+    header: PropTypes.string,
     dropdownData: PropTypes.array.isRequired,
     onValueChange: PropTypes.func,
     onShowError: PropTypes.func.isRequired,
