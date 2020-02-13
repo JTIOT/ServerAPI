@@ -4,6 +4,7 @@ import faker from 'faker';
 import {Dropdown, Segment, Header, Button} from 'semantic-ui-react';
 // import InputField from '../../components/inputField/inputField';
 import Item from '../../components/Item/Item';
+import DropdownList from '../../components/dropdownList/dropdownList';
 
 import classes from './deviceDispatch.module.scss';
 
@@ -15,7 +16,7 @@ const modelOptions = () => {
             key:i,
             text:model,
             value:model,
-            category:'model'
+            // category:'model'
         })
     }
     return models;
@@ -30,7 +31,7 @@ const typeOptions = () => {
             key:i,
             text:type,
             value:type,
-            category:'type'
+            // category:'type'
         })
     }
     return types;
@@ -45,7 +46,7 @@ const companyOptions = () => {
             key:i,
             text:company,
             value:company,
-            category:'company'
+            // category:'company'
         })
     }
     return companys;
@@ -61,7 +62,7 @@ const recipientOptions = () => {
             key:i,
             text:recipient,
             value:recipient,
-            category:'recipient'
+            // category:'recipient'
         })
     }
     return recipients;
@@ -83,6 +84,7 @@ const getDevices = () => {
 
 }
 
+//selected data from dropdown
 const initData = {
     model:null,
     type:null,
@@ -90,6 +92,7 @@ const initData = {
     recipient:null
 }
 
+//data for each dropdown
 const dropdownData = [
     {
         category:'model',
@@ -122,9 +125,9 @@ const DeviceDispatch = () => {
     const [items, setItems] = useState(getDevices());
     const [data, setData] = useState(initData);
 
-    const handleDataChange = (e, prop) => {
-        const selectedData = prop.options.find(e=>e.value===prop.value);
-        setData({...data, [selectedData.category]:selectedData})
+    const handleValueChange = (category, value, dropdownOptions) => {
+        const selectedData = dropdownOptions.find(e=>e.value===value);
+        setData({...data, [category]:selectedData})
     }
 
     const handleOutput = ()=>{
@@ -149,27 +152,6 @@ const DeviceDispatch = () => {
         });
     }
 
-    const renderDropdownlist = () => {
-
-        return dropdownData.map((element, index)=>{
-            return <Segment
-                    key={index}
-                    content={<Dropdown 
-                    placeholder={element.placeholder}
-                    selection
-                    search
-                    button
-                    noResultsMessage={element.noResultsMessage}
-                    options={element.options}
-                    value={data[element.category]?data[element.category].value:initData[element.category]}
-                    text={data[element.category]?data[element.category].text:null}
-                    onChange={handleDataChange}
-                    error={data[element.category]?false:true}
-                    />}
-                />
-        })
-    }
-
     return (
         <div className={classes.overlay}>
             <Header 
@@ -183,22 +165,16 @@ const DeviceDispatch = () => {
                 {
                     //dropdown menu
                 }
-                <Segment.Group 
-                className={classes.selection}
-                compact
-                >
-                    <Segment>
-                        <Header 
-                        icon='cog' 
-                        color='purple'
-                        content='Management' 
-                        subheader='Manage your delivery' 
-                        />
-                    </Segment>
-                    {   
-                        renderDropdownlist()
-                    }
-                </Segment.Group>
+                <DropdownList 
+                header='Management' 
+                subheader='Manage your delivery' 
+                headerColor='purple'
+                headerIcon='cog'
+                dropdownData={dropdownData}
+                onShowText={category=>data[category]?data[category].text:null}
+                onShowError={category=>data[category]?false:true}
+                onValueChange={handleValueChange}
+                />
                 {
                     //scanned device list
                 }
