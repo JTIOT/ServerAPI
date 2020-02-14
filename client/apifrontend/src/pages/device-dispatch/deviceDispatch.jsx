@@ -4,6 +4,7 @@ import {Segment, Header, Button} from 'semantic-ui-react';
 import Item from '../../components/Item/Item';
 import DropdownList from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
+import { CSVLink } from "react-csv";
 
 import classes from './deviceDispatch.module.scss';
 
@@ -120,6 +121,7 @@ const DeviceDispatch = () => {
 
     const [items, setItems] = useState(getDevices());
     const [data, setData] = useState(initData);
+    const [csvData, setCSVData] = useState(null);
 
     const handleValueChange = (category, value, dropdownOptions) => {
         const selectedData = dropdownOptions.find(e=>e.value===value);
@@ -130,8 +132,26 @@ const DeviceDispatch = () => {
         setItems(null);
     }
 
-    const handleOutput = ()=>{
+    const createCSVData = async ()=>{
+        if(items && items.length>0)
+        {
+            let csv = items.map(i=>{
+                return [i.value];
+            });
+
+            csv.unshift(['DeviceMAC']);
+            return csv
+        }
+
+        return null;
+    }
+
+    const handleOutput = async ()=>{
         console.log(data, items);
+
+        const csv = await createCSVData();
+        console.log(csv);
+        csv?setCSVData(csv):setCSVData(null);
     }
     
     const handleItemDelete = (dataIndex) => {
@@ -218,7 +238,19 @@ const DeviceDispatch = () => {
                     }
                 </GroupList>
             </div>    
-            <Button primary content='Output' onClick={handleOutput} />        
+            <Button primary content='Output' onClick={handleOutput} />
+            {
+                csvData?
+                <Button  content={
+                    <CSVLink 
+                    data={csvData}
+                    filename={'DeviceMAC.csv'}
+                    >Download CSV file</CSVLink>
+                } />
+                
+                :
+                null
+            }     
         </div>
     );
 }
