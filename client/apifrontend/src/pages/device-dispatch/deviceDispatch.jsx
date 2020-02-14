@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import faker from 'faker';
-import {Segment, Header, Button} from 'semantic-ui-react';
+import {Segment, Header, Button, Popup} from 'semantic-ui-react';
 import Item from '../../components/Item/Item';
 import DropdownList from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
 import { CSVLink } from "react-csv";
+import CSVReaderButton from '../../components/csvReaderButton/csvReaderButton';
+
 
 import classes from './deviceDispatch.module.scss';
 
@@ -138,8 +140,6 @@ const DeviceDispatch = () => {
             let csv = items.map(i=>{
                 return [i.value];
             });
-
-            csv.unshift(['DeviceMAC']);
             return csv
         }
 
@@ -152,6 +152,24 @@ const DeviceDispatch = () => {
         const csv = await createCSVData();
         console.log(csv);
         csv?setCSVData(csv):setCSVData(null);
+    }
+
+    const handleImportCSV = (inData) => {
+        console.log(inData);
+
+        const transformedData = inData.map((e, i)=>{
+            return {
+                key:i,
+                text:e[0],
+                value:e[0]
+            }
+        });
+
+        setItems(transformedData);
+    }
+
+    const handleImportCSVError = (error) =>{
+        console.log('read csv fail', error);
     }
     
     const handleItemDelete = (dataIndex) => {
@@ -234,11 +252,20 @@ const DeviceDispatch = () => {
                         :
                         <Segment placeholder>
                             <Header color='red' content='There is no device. Scan your deivce to start' />
+                            <CSVReaderButton 
+                            title='Import csv'
+                            onReadCSV={handleImportCSV}
+                            onError={handleImportCSVError}
+                            />
                         </Segment>
                     }
                 </GroupList>
-            </div>    
-            <Button primary content='Output' onClick={handleOutput} />
+            </div> 
+            <Popup trigger={    
+                <Button primary content='Output' onClick={handleOutput} />
+            }>
+                Output your result in console and download your csv file
+            </Popup>
             {
                 csvData?
                 <Button  content={
