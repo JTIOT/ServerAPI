@@ -18,7 +18,7 @@ const Item = ({title, dataIndex, onDelete}) => {
 
     return(
         <Segment className={classes.overlay} basic textAlign='center'>
-            <Popup 
+            <Popup
             trigger={<Button basic color='black' content={title} />} 
             hoverable 
             hideOnScroll
@@ -28,15 +28,13 @@ const Item = ({title, dataIndex, onDelete}) => {
             onClose={()=>setActive(false)}
             mouseEnterDelay={500}
             >
-                
                 <Menu.Item content={
                     <Button 
                     color='red' 
                     content='Delete'
                     onClick={()=>handleDelete()}
-                     />
+                    />
                 } />
-                
             </Popup>
         </Segment>
     );

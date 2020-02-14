@@ -126,6 +126,10 @@ const DeviceDispatch = () => {
         setData({...data, [category]:selectedData})
     }
 
+    const handleClearAll = ()=>{
+        setItems(null);
+    }
+
     const handleOutput = ()=>{
         console.log(data, items);
     }
@@ -186,6 +190,20 @@ const DeviceDispatch = () => {
                 headerAlign='left'
                 headerColor='purple'
                 >
+                    {
+                        items && items.length>0?
+                        <Segment>
+                            <Button
+                            className={classes.clearBtn} 
+                            icon='delete'
+                            color='red' 
+                            content='Clear all'
+                            onClick={handleClearAll}
+                            />
+                        </Segment>
+                        :
+                        null
+                    }
                     {
                         items!==null && items.length>0?
                         <Segment className={classes.itemGroup}>

@@ -6,4 +6,4 @@ export default {
     component:Item
 }
 
-export const basicItem = () => <Item name='abcdefg' />
+export const basicItem = () => <Item title='abcdefg' />
