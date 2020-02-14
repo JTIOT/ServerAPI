@@ -6,7 +6,7 @@ import DropdownList from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
 import { CSVLink } from "react-csv";
 import CSVReaderButton from '../../components/csvReaderButton/csvReaderButton';
-
+import { useSpring, animated } from 'react-spring'
 
 import classes from './deviceDispatch.module.scss';
 
@@ -124,6 +124,14 @@ const DeviceDispatch = () => {
     const [items, setItems] = useState(getDevices());
     const [data, setData] = useState(initData);
     const [csvData, setCSVData] = useState(null);
+    const [toggle, setToggle] = useState(false);
+    const {x} = useSpring({ 
+        from:{x:0}, 
+        to:{x:toggle?1:0}, 
+        reset:true,
+        onRest:()=>setToggle(false), 
+        config:{duration:900} 
+    });
 
     const handleValueChange = (category, value, dropdownOptions) => {
         const selectedData = dropdownOptions.find(e=>e.value===value);
@@ -148,7 +156,12 @@ const DeviceDispatch = () => {
 
     const handleOutput = async ()=>{
         console.log(data, items);
-
+        
+        if(!(data.model && data.type && data.company && data.recipient)){
+            console.log('toggle');
+            setToggle(true);
+            return
+        }
         const csv = await createCSVData();
         console.log(csv);
         csv?setCSVData(csv):setCSVData(null);
@@ -203,20 +216,28 @@ const DeviceDispatch = () => {
                 {
                     //dropdown menu
                 }
-                <GroupList
-                className={classes.selection}
-                header='Management'
-                subheader='Manage your delivery'
-                headerIcon='cog'
-                headerAlign='left'
-                >
-                    <DropdownList 
-                    dropdownData={dropdownData}
-                    onShowText={category=>data[category]?data[category].text:null}
-                    onShowError={category=>data[category]?false:true}
-                    onValueChange={handleValueChange}
-                    />
-                </GroupList>
+                <animated.div style={{
+                    transform:x.interpolate({
+                        range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
+                        output: [1, 0.97, 0.9, 1.1, 0.9, 1.1, 1.03, 1]
+                    })
+                    .interpolate(x=>`scale(${x})`)
+                }}>
+                    <GroupList
+                    className={classes.selection}
+                    header='Management'
+                    subheader='Manage your delivery'
+                    headerIcon='cog'
+                    headerAlign='left'
+                    >
+                        <DropdownList 
+                        dropdownData={dropdownData}
+                        onShowText={category=>data[category]?data[category].text:null}
+                        onShowError={category=>data[category]?false:true}
+                        onValueChange={handleValueChange}
+                        />
+                    </GroupList>
+                </animated.div>
                 {
                     //scanned device list
                 }
