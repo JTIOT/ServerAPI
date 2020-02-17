@@ -4,7 +4,7 @@ import classes from './qr-reader.module.scss';
 
 const QRCodeReader = () => {
 
-    const [qrcodeList, setQrcodeList] = useState([]);
+    const [qrcodeList, setQrcodeList] = useState<string[]>([]);
 
     /**
      * Format mac from QRCode
@@ -12,7 +12,7 @@ const QRCodeReader = () => {
      * turn into 20:59:A0:B0:AA:20
      * @param {*} qrcode 
      */
-    const macFromQRCode = (qrcode) => {
+    const macFromQRCode = (qrcode:string) => {
 
         //extract mac from qrcode url
         const mac = qrcode.substring(qrcode.lastIndexOf('/')+1);
@@ -32,14 +32,14 @@ const QRCodeReader = () => {
         return formatedMac;
     }
 
-    const handleError = (err) => {
+    const handleError = (err:any) => {
 
         console.log('QRCode error ', err);
 
         // setQrcode(null);
     }
 
-    const handleScan = (data) => {
+    const handleScan = (data:string|null) => {
 
         // console.log('QRCode scan ', data);
 

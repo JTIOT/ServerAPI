@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import {action} from '@storybook/addon-actions';
 import {Dropdown, Button, Segment} from 'semantic-ui-react';
 import faker from 'faker';
-import DropdownList from'../components/dropdownList/dropdownList';
+import DropdownList,{DropdownOption} from'../components/dropdownList/dropdownList';
 import GroupList from '../components/groupList/groupList';
 
 
@@ -107,7 +107,10 @@ const recipientOptions = () => {
 
 }
 
-const initData = {
+interface SelectedData{
+    [key:string]:any|null
+}
+const initData:SelectedData = {
     model:null,
     type:null,
     company:null,
@@ -145,7 +148,7 @@ export const SemanticDropdown = () => {
 
     const [data, setData] = useState(initData);
 
-    const handleValueChange = (category, value, dropdownOptions) => {
+    const handleValueChange = (category:any, value:any, dropdownOptions:DropdownOption[]) => {
         const selectedData = dropdownOptions.find(e=>e.value===value);
         setData({...data, [category]:selectedData})
     }

@@ -4,20 +4,26 @@ import { CSVReader } from 'react-papaparse'
 
 import classes from './csvReaderButton.module.scss';
 
-const CSVReaderButton = ({title, onReadCSV, onError}) =>{
-    
-    let ref = createRef();
+interface Props{
+    title: string,
+    onReadCSV: (data:any)=>void,
+    onError: (err:any)=>void
+}
 
-    const handleReadCSV = (data) => {
+const CSVReaderButton:React.FC<Props> = ({title, onReadCSV, onError}) =>{
+    
+    let ref = createRef<HTMLElement>();
+
+    const handleReadCSV = (data:any) => {
         onReadCSV(data.data);
     }
     
-    const handleOnError = (err, file, inputElem, reason) => {
+    const handleOnError = (err:any, file:any, inputElem:any, reason:any) => {
         onError(err);
     }
     
     const handleImportOffer = () => {
-        ref.current.click();
+        if(ref && ref.current) ref.current.click();
     }
 
     return (

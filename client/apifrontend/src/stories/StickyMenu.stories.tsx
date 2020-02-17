@@ -81,7 +81,7 @@ const Paragraph = () => (
 export const MenuTop = () => {
 
     const [fixedMenu, setFixedMenu] = useState(false);
-    let contextRef = createRef();
+    let contextRef = createRef<HTMLDivElement>();
 
     return (
         <div style={{display:'flex', justifyContent:'center'}}>

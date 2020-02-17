@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import faker from 'faker';
 import {Segment, Header, Button, Popup} from 'semantic-ui-react';
 import Item from '../../components/Item/Item';
-import DropdownList from '../../components/dropdownList/dropdownList';
+import DropdownList, {DropdownOption} from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
 import { CSVLink } from "react-csv";
 import CSVReaderButton from '../../components/csvReaderButton/csvReaderButton';
@@ -84,7 +84,11 @@ const getDevices = () => {
 }
 
 //selected data from dropdown
-const initData = {
+interface SelectedData{
+    [key:string]: any|null,
+}
+
+const initData:SelectedData = {
     model:null,
     type:null,
     company:null,
@@ -121,9 +125,9 @@ const dropdownData = [
 
 const DeviceDispatch = () => {
 
-    const [items, setItems] = useState(getDevices());
-    const [data, setData] = useState(initData);
-    const [csvData, setCSVData] = useState(null);
+    const [items, setItems] = useState<any|null>(getDevices());
+    const [data, setData] = useState<SelectedData>(initData);
+    const [csvData, setCSVData] = useState<any>('');
     const [toggle, setToggle] = useState(false);
     const {x} = useSpring({ 
         from:{x:0}, 
@@ -133,7 +137,7 @@ const DeviceDispatch = () => {
         config:{duration:900} 
     });
 
-    const handleValueChange = (category, value, dropdownOptions) => {
+    const handleValueChange = (category:any, value:any, dropdownOptions:DropdownOption[]) => {
         const selectedData = dropdownOptions.find(e=>e.value===value);
         setData({...data, [category]:selectedData})
     }
@@ -145,7 +149,7 @@ const DeviceDispatch = () => {
     const createCSVData = async ()=>{
         if(items && items.length>0)
         {
-            let csv = items.map(i=>{
+            let csv = items.map((i:any)=>{
                 return [i.value];
             });
             return csv
@@ -167,10 +171,10 @@ const DeviceDispatch = () => {
         csv?setCSVData(csv):setCSVData(null);
     }
 
-    const handleImportCSV = (inData) => {
+    const handleImportCSV = (inData:any) => {
         console.log(inData);
 
-        const transformedData = inData.map((e, i)=>{
+        const transformedData = inData.map((e:any, i:number)=>{
             return {
                 key:i,
                 text:e[0],
@@ -181,11 +185,11 @@ const DeviceDispatch = () => {
         setItems(transformedData);
     }
 
-    const handleImportCSVError = (error) =>{
+    const handleImportCSVError = (error:any) =>{
         console.log('read csv fail', error);
     }
     
-    const handleItemDelete = (dataIndex) => {
+    const handleItemDelete = (dataIndex:any) => {
 
         console.log('Delete item',items.splice(dataIndex, 1));
         setItems([...items]);
@@ -193,7 +197,7 @@ const DeviceDispatch = () => {
 
     const renderItems = () => {
     
-        return items.map((item, index)=>{
+        return items.map((item:any, index:number)=>{
             return <Item 
             key={index} 
             dataIndex={index} 
@@ -221,7 +225,7 @@ const DeviceDispatch = () => {
                         range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
                         output: [1, 0.97, 0.9, 1.1, 0.9, 1.1, 1.03, 1]
                     })
-                    .interpolate(x=>`scale(${x})`)
+                    .interpolate((x:any)=>`scale(${x})`)
                 }}>
                     <GroupList
                     className={classes.selection}
@@ -232,8 +236,8 @@ const DeviceDispatch = () => {
                     >
                         <DropdownList 
                         dropdownData={dropdownData}
-                        onShowText={category=>data[category]?data[category].text:null}
-                        onShowError={category=>data[category]?false:true}
+                        onShowText={(category:any)=>data[category]?data[category].text:null}
+                        onShowError={(category:any)=>data[category]?false:true}
                         onValueChange={handleValueChange}
                         />
                     </GroupList>
@@ -295,7 +299,6 @@ const DeviceDispatch = () => {
                     filename={'DeviceMAC.csv'}
                     >Download CSV file</CSVLink>
                 } />
-                
                 :
                 null
             }     

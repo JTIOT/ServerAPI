@@ -3,7 +3,13 @@ import {Segment, Popup, Button, Menu} from 'semantic-ui-react';
 
 import classes from './Item.module.scss';
 
-const Item = ({title, dataIndex, onDelete}) => {
+interface Props{
+    title: string,
+    dataIndex: string|number,
+    onDelete?: (dataIndex:string|number, title:string)=>void 
+}
+
+const Item: React.FC<Props> = ({title, dataIndex, onDelete}) => {
 
     const [active, setActive] = useState(false);
 

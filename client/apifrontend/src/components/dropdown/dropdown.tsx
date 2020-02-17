@@ -2,12 +2,19 @@ import React, {useState} from 'react';
 
 import classes from './dropdown.module.scss';
 
-const Dropdown = ({title='', options=[], onValueChanged}) => {
+interface Props{
+    title?: string,
+    options: Array<string>,
+    onValueChanged?: (value:string|undefined, index:number|undefined)=>void
+}
+
+const Dropdown: React.FC<Props> = ({title='', options=[], onValueChanged}) => {
 
     const [value, setValue] = useState('');
 
-    const onValueChange = (e)=>{
-        
+    const onValueChange = (e:any | undefined)=>{
+        if(!e) return;
+
         const val = e.target.value;
 
         setValue(val);

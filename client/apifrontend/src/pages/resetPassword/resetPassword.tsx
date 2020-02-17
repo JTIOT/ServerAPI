@@ -1,10 +1,15 @@
 import React,{useState, useEffect} from 'react';
 import axios from 'axios';
 import ip from 'ip';
+import {match} from 'react-router-dom';
 import classes from './resetPassword.module.scss';
 
-const ResetPassword = ({match})=>{
 
+interface Props{
+    match: match<{userId:string, token:string}>
+}
+
+const ResetPassword: React.FC<Props> = ({match})=>{
     const {userId, token} = match.params;
     const [resetSuccess, setResetSuccess] = useState(false);
     const [newPassword, setNewPassword] = useState('');
@@ -28,7 +33,7 @@ const ResetPassword = ({match})=>{
     },
     [newPassword, confirmPassword]);
 
-    const onFormSubmit = (e)=>{
+    const onFormSubmit = (e:any)=>{
         e.preventDefault();
 
         if(!passErrorMsg){
@@ -95,7 +100,7 @@ const ResetPassword = ({match})=>{
                         <label>Confirm password</label>
                         <input className={classes.confirmPasswordField}
                             type='password' 
-                            onChangeCapture={(e)=>setConfirmPassword(e.target.value)}
+                            onChangeCapture={(e:any)=>setConfirmPassword(e.target.value)}
                             required />
                     </div>
                     {

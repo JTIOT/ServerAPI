@@ -2,11 +2,17 @@ import React, {useState} from 'react';
 
 import classes from './inputField.module.scss';
 
-const InputField = ({title='', placeholder='', onValueChanged}) => {
+interface Props {
+    title?: string,
+    placeholder?: string,
+    onValueChanged?: (value:string)=>void
+}
+
+const InputField: React.FC<Props> = ({title='', placeholder='', onValueChanged}) => {
 
     const [value, setValue] = useState('');
 
-    const onValueChange = (e) => {
+    const onValueChange = (e:any) => {
         setValue(e.target.value);
         if(onValueChanged){
             onValueChanged(e.target.value);

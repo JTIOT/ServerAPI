@@ -6,4 +6,4 @@ export default {
     component:Item
 }
 
-export const basicItem = () => <Item title='abcdefg' />
+export const basicItem = () => <Item title='abcdefg' dataIndex={1} />
