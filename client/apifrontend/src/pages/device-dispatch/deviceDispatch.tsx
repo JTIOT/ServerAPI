@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import faker from 'faker';
 import {Segment, Header, Button, Popup} from 'semantic-ui-react';
 import Item from '../../components/Item/Item';
-import DropdownList, {DropdownOption} from '../../components/dropdownList/dropdownList';
+import DropdownList, {DropdownOption, DropdownMetadata} from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
 import { CSVLink } from "react-csv";
 import CSVReaderButton from '../../components/csvReaderButton/csvReaderButton';
@@ -96,7 +96,7 @@ const initData:SelectedData = {
 }
 
 //data for each dropdown
-const dropdownData = [
+const dropdownData:DropdownMetadata[] = [
     {
         category:'model',
         placeholder:'Select Model',
