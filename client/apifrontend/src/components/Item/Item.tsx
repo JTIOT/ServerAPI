@@ -38,8 +38,8 @@ const Item: React.FC<Props> = ({
             trigger={<Button  
                 color='grey' 
                 content={title}
-                label={{basic: false, pointing: labelPointer, content: labelTitle }}
-                labelPosition={labelPosition} 
+                label={labelTitle?{basic: false, pointing: labelPointer, content: labelTitle }:undefined}
+                labelPosition={labelTitle?labelPosition:undefined} 
                 />} 
             hoverable 
             hideOnScroll
