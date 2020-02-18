@@ -4,7 +4,6 @@ import {Segment, Header, Button, Popup} from 'semantic-ui-react';
 import Item from '../../components/Item/Item';
 import DropdownList, {DropdownOption, DropdownMetadata} from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
-import { CSVLink } from "react-csv";
 import CSVReaderButton from '../../components/csvReaderButton/csvReaderButton';
 import CSVDownloadButton from '../../components/csvDownloadButton/csvDownloadButton';
 import { useSpring, animated } from 'react-spring'
@@ -290,16 +289,18 @@ const DeviceDispatch = () => {
                     }
                 </GroupList>
             </div> 
-            <Popup trigger={    
-                <Button primary content='Output' onClick={handleOutput} />
-            }>
-                Output your result in console and download your csv file
-            </Popup>
-            <CSVDownloadButton 
-            title='Download CSV File' 
-            csvData={csvData} 
-            outputFilename='DeviceMAC.csv' 
-            />    
+            <div className={classes.buttonGroup}>
+                <Popup trigger={    
+                    <Button primary content='Output' onClick={handleOutput} />
+                }>
+                    Output your result in console and download your csv file
+                </Popup>
+                <CSVDownloadButton 
+                title='Download CSV File' 
+                csvData={csvData} 
+                outputFilename='DeviceMAC.csv' 
+                />
+            </div>    
         </div>
     );
 }
