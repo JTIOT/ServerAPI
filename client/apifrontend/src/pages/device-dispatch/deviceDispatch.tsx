@@ -204,6 +204,9 @@ const DeviceDispatch = () => {
             dataIndex={index} 
             title={item.text} 
             onDelete={handleItemDelete} 
+            labelTitle={`${index+1}`}
+            labelPosition='left'
+            labelPointer='right'
             />
         });
     }

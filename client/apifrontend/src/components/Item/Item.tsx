@@ -6,10 +6,20 @@ import classes from './Item.module.scss';
 interface Props{
     title: string,
     dataIndex: string|number,
-    onDelete?: (dataIndex:string|number, title:string)=>void 
+    onDelete?: (dataIndex:string|number, title:string)=>void,
+    labelTitle?: string|undefined,
+    labelPosition?: "left"|"right"|undefined
+    labelPointer?: "left"|"right"|undefined
 }
 
-const Item: React.FC<Props> = ({title, dataIndex, onDelete}) => {
+const Item: React.FC<Props> = ({
+    title, 
+    dataIndex, 
+    onDelete, 
+    labelTitle, 
+    labelPosition, 
+    labelPointer
+}) => {
 
     const [active, setActive] = useState(false);
 
@@ -25,7 +35,12 @@ const Item: React.FC<Props> = ({title, dataIndex, onDelete}) => {
     return(
         <Segment className={classes.overlay} basic textAlign='center'>
             <Popup
-            trigger={<Button basic color='black' content={title} />} 
+            trigger={<Button  
+                color='grey' 
+                content={title}
+                label={{basic: false, pointing: labelPointer, content: labelTitle }}
+                labelPosition={labelPosition} 
+                />} 
             hoverable 
             hideOnScroll
             open={active}
