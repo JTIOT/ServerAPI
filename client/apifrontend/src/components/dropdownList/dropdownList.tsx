@@ -1,8 +1,6 @@
 import React from 'react';
 import {Dropdown, Segment} from 'semantic-ui-react';
 import {DropdownProps, DropdownItemProps} from 'semantic-ui-react';
-// import { string, number } from 'prop-types';
-// import PropTypes from 'prop-types';
 
 export interface DropdownOption{
     key: number|string,
@@ -25,18 +23,26 @@ export interface DropdownMetadata{
 }
 
 interface Props{
+    segmented? : boolean,
     dropdownData: DropdownMetadata[],
     onValueChange: (category:any, value:any, options:DropdownOption[])=>void,
     onShowError: (category:any)=>boolean,
-    onShowText: (category:any)=>string
+    onShowText: (category:any)=>string|null
 }
 
-const DropdownList: React.FC<Props> = ({
-    dropdownData,
-    onValueChange,
-    onShowError,
-    onShowText
-})=>{
+/**
+ * DropdownList render a list of dropdown component
+ * @param props 
+ */
+const DropdownList: React.FC<Props> = (props)=>{
+
+    const {
+        segmented=true,
+        dropdownData,
+        onValueChange,
+        onShowError,
+        onShowText
+    } = props;
 
     const handleShowText = (category:any)=>{
         const text = onShowText(category);
@@ -75,6 +81,7 @@ const DropdownList: React.FC<Props> = ({
         return dropdownData.map((element, index)=>{
             return <Segment
                     key={index}
+                    basic={!segmented}
                     content={<Dropdown 
                     placeholder={element.placeholder}
                     selection
@@ -98,13 +105,5 @@ const DropdownList: React.FC<Props> = ({
         </React.Fragment>
     );
 }
-
-// DropdownList.propTypes={
-//     header: PropTypes.string,
-//     dropdownData: PropTypes.array.isRequired,
-//     onValueChange: PropTypes.func,
-//     onShowError: PropTypes.func.isRequired,
-//     onShowText: PropTypes.func.isRequired
-// }
 
 export default DropdownList;

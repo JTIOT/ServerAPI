@@ -1,7 +1,6 @@
 import React from 'react';
 import {Segment, Header} from 'semantic-ui-react';
 import {StrictHeaderProps} from 'semantic-ui-react';
-// import PropTypes from 'prop-types';
 
 interface Props{
     children?: any,
@@ -13,6 +12,10 @@ interface Props{
     [x:string]: any
 }
 
+/**
+ * GroupList component display a title and render it's children
+ * @param props 
+ */
 const GroupList: React.FC<Props> = (props)=>{
     const {
         className,
@@ -44,12 +47,5 @@ const GroupList: React.FC<Props> = (props)=>{
         </Segment.Group>
     );
 }
-
-// GroupList.propTypes={
-//     header: PropTypes.string,
-//     headerAlign: PropTypes.string,
-//     subheader: PropTypes.string,
-//     headerColor: PropTypes.string
-// }
 
 export default GroupList;

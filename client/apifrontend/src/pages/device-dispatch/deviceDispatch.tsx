@@ -6,6 +6,7 @@ import DropdownList, {DropdownOption, DropdownMetadata} from '../../components/d
 import GroupList from '../../components/groupList/groupList';
 import { CSVLink } from "react-csv";
 import CSVReaderButton from '../../components/csvReaderButton/csvReaderButton';
+import CSVDownloadButton from '../../components/csvDownloadButton/csvDownloadButton';
 import { useSpring, animated } from 'react-spring'
 
 import classes from './deviceDispatch.module.scss';
@@ -83,12 +84,12 @@ const getDevices = () => {
 
 }
 
-//selected data from dropdown
-interface SelectedData{
+
+interface UesrSelectedData{
     [key:string]: any|null,
 }
-
-const initData:SelectedData = {
+//initial data for user selected data
+const initData:UesrSelectedData = {
     model:null,
     type:null,
     company:null,
@@ -126,9 +127,9 @@ const dropdownData:DropdownMetadata[] = [
 const DeviceDispatch = () => {
 
     const [items, setItems] = useState<any|null>(getDevices());
-    const [data, setData] = useState<SelectedData>(initData);
+    const [data, setData] = useState<UesrSelectedData>(initData);
     const [csvData, setCSVData] = useState<any>('');
-    const [toggle, setToggle] = useState(false);
+    const [toggle, setToggle] = useState<boolean>(false);
     const {x} = useSpring({ 
         from:{x:0}, 
         to:{x:toggle?1:0}, 
@@ -162,7 +163,6 @@ const DeviceDispatch = () => {
         console.log(data, items);
         
         if(!(data.model && data.type && data.company && data.recipient)){
-            console.log('toggle');
             setToggle(true);
             return
         }
@@ -191,7 +191,8 @@ const DeviceDispatch = () => {
     
     const handleItemDelete = (dataIndex:any) => {
 
-        console.log('Delete item',items.splice(dataIndex, 1));
+        const i = items.splice(dataIndex, 1);
+        console.log('Delete item',i);
         setItems([...items]);
     }
 
@@ -253,7 +254,7 @@ const DeviceDispatch = () => {
                 headerAlign='left'
                 headerColor='purple'
                 >
-                    {
+                    {//clear all button
                         items && items.length>0?
                         <Segment>
                             <Button
@@ -267,7 +268,7 @@ const DeviceDispatch = () => {
                         :
                         null
                     }
-                    {
+                    {//list of device or import from scv
                         items!==null && items.length>0?
                         <Segment className={classes.itemGroup}>
                         {
@@ -291,17 +292,11 @@ const DeviceDispatch = () => {
             }>
                 Output your result in console and download your csv file
             </Popup>
-            {
-                csvData?
-                <Button  content={
-                    <CSVLink 
-                    data={csvData}
-                    filename={'DeviceMAC.csv'}
-                    >Download CSV file</CSVLink>
-                } />
-                :
-                null
-            }     
+            <CSVDownloadButton 
+            title='Download CSV File' 
+            csvData={csvData} 
+            outputFilename='DeviceMAC.csv' 
+            />    
         </div>
     );
 }
