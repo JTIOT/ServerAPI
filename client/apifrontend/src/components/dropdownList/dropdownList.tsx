@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dropdown, Segment} from 'semantic-ui-react';
+import {Dropdown, Segment, SegmentGroup} from 'semantic-ui-react';
 import {DropdownProps, DropdownItemProps} from 'semantic-ui-react';
 
 export interface DropdownOption{

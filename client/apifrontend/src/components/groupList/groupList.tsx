@@ -1,5 +1,5 @@
 import React from 'react';
-import {Segment, Header} from 'semantic-ui-react';
+import {Segment, Header, Card, SegmentGroup} from 'semantic-ui-react';
 import {StrictHeaderProps} from 'semantic-ui-react';
 
 interface Props{
@@ -27,7 +27,30 @@ const GroupList: React.FC<Props> = (props)=>{
         headerColor='purple',
     } = props;
 
+    // return (
+    //     <Card>
+    //         <Card.Content>
+    //             <Card.Header>
+    //                 <Header 
+    //                 color={headerColor} 
+    //                 icon={headerIcon}
+    //                 content={header} 
+    //                 />
+    //             </Card.Header>
+    //             <Card.Meta>
+    //                 {subheader}
+    //             </Card.Meta>
+    //         </Card.Content>
+    //         <Card.Content>
+    //         {
+    //             children
+    //         }
+    //         </Card.Content>
+    //     </Card>
+    // );
+
     return (
+
         <Segment.Group
         className={className} 
         compact
@@ -45,6 +68,7 @@ const GroupList: React.FC<Props> = (props)=>{
                 children
             }
         </Segment.Group>
+
     );
 }
 
