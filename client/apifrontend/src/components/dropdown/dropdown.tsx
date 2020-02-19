@@ -8,7 +8,7 @@ interface Props{
     onValueChanged?: (value:string|undefined, index:number|undefined)=>void
 }
 
-const Dropdown: React.FC<Props> = ({title='', options=[], onValueChanged}) => {
+const Dropdown = <T extends Props>({title='', options=[], onValueChanged}:T) => {
 
     const [value, setValue] = useState('');
 

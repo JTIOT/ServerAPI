@@ -13,11 +13,11 @@ interface Props{
  * 
  * Render nothing if csv data is null
  */
-const CSVDownloadButton: React.FC<Props> = ({
+const CSVDownloadButton = <T extends Props>({
     title='Download CSV File',
     csvData,
     outputFilename='Output.csv'
-})=>{
+}:T)=>{
 
     if(csvData){
         return(

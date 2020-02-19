@@ -10,7 +10,7 @@ interface Props{
     onError: (err:any)=>void
 }
 
-const CSVReaderButton:React.FC<Props> = ({title, onReadCSV, onError}) =>{
+const CSVReaderButton = <T extends Props>({title, onReadCSV, onError}:T) =>{
     
     let ref = createRef<HTMLElement>();
 

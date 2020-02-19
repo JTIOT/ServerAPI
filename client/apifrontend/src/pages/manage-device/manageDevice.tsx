@@ -92,9 +92,17 @@ const ManageDeivce = ()=>{
         config:{duration:900} 
     });
 
-    const handleValueChange = (category:any, value:any, dropdownOptions:DropdownOption[]) => {
-        const selectedData = dropdownOptions.find(e=>e.value===value);
+    function handleValueChange(category:string, value:any, dropdownOptions:DropdownOption[]) {
+        const selectedData = dropdownOptions.find((e:DropdownOption)=>e.value===value);
         setData({...data, [category]:selectedData})
+    }
+
+    function handleShowText(category:string){
+        return data[category]?data[category].text:undefined
+    }
+
+    function handleShowError(category:string){
+        return data[category]?false:true
     }
 
     return (
@@ -119,8 +127,8 @@ const ManageDeivce = ()=>{
                 >
                     <DropdownList 
                     dropdownData={dropdownData}
-                    onShowText={(category:any)=>data[category]?data[category].text:null}
-                    onShowError={(category:any)=>data[category]?false:true}
+                    onShowText={handleShowText}
+                    onShowError={handleShowError}
                     onValueChange={handleValueChange}
                     />
                 </GroupList>

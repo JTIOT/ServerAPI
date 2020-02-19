@@ -1,84 +1,89 @@
 import React from 'react';
-import {Dropdown, Segment, SegmentGroup} from 'semantic-ui-react';
-import {DropdownProps, DropdownItemProps} from 'semantic-ui-react';
+import {Dropdown, Segment} from 'semantic-ui-react';
+import {DropdownProps} from 'semantic-ui-react';
 
+/**
+ * Type for options in each dropdwon
+ */
 export interface DropdownOption{
     key: number|string,
     text: string,
     value: any,
 }
 
-const defaultOption:DropdownOption = {
-    key: '',
-    text: '',
-    value: '',
-}
-
-
+/**
+ * Type for dropdown's metadata
+ */
 export interface DropdownMetadata{
-    category: any,
+    category: TCategory,
     placeholder: string,
     noResultsMessage: string,
     options: DropdownOption[],
 }
 
+/**
+ * Category type
+ */
+type TCategory = | string;
+
 interface Props{
     segmented? : boolean,
     dropdownData: DropdownMetadata[],
-    onValueChange: (category:any, value:any, options:DropdownOption[])=>void,
-    onShowError: (category:any)=>boolean,
-    onShowText: (category:any)=>string|null
+    onValueChange: <
+    T extends TCategory,
+    V extends any,
+    K extends DropdownOption>(category:T, value:V, options:K[])=>void,
+    onShowError: <T extends TCategory>(category:T)=>boolean,
+    onShowText: <T extends TCategory>(category:T)=>string|undefined
 }
 
 /**
  * DropdownList render a list of dropdown component
- * @param props 
- */
-const DropdownList: React.FC<Props> = (props)=>{
+ * @param {boolean} segmented each dropdown is segmented
+ * @param {Array<DropdownMetadata>} dropdownData an array of DropdownMetadata define how
+ * many dropdown will be rendered
+ * @param {fucntion} onValueChange a callback when dropdown value changed
+ * @param {fucntion} onShowError a callback ask if dropdown need to show error
+ * @param {fucntion} onShowText a callback ask for dropdown selected text for display purpose
+ */ 
+const DropdownList = <T extends Props>({
+    segmented=true,
+    dropdownData,
+    onValueChange,
+    onShowError,
+    onShowText
+}:T)=>{
 
-    const {
-        segmented=true,
-        dropdownData,
-        onValueChange,
-        onShowError,
-        onShowText
-    } = props;
+    //construct options by category
+    let options:{[key in TCategory]:DropdownOption[]} = {};
+    dropdownData.forEach(e=>{
+        options = {...options, [e.category]:e.options};
+    })
 
-    const handleShowText = (category:any)=>{
+    function handleShowText(category:TCategory){
         const text = onShowText(category);
         return text?text:undefined;
     }
 
-    const handleShowError = (category:any)=>{
+    function handleShowError(category:TCategory){
         const value = onShowError(category);
         return value;
     }
 
-    const handleValueChange = (
-        e:React.SyntheticEvent<HTMLElement, Event>,
-         prop:DropdownProps
-         )=>{
-        
-        let transformedOptions:DropdownOption[] = [];
+    function handleValueChange<V,K extends DropdownProps>(
+        category:TCategory,
+        e:V,
+         prop:K
+         ){
 
-        //transform semantic dropdown options to options with key
-        if(prop.options){ 
-            prop.options.forEach(e=>{
-                const o = Object.assign<DropdownOption, DropdownItemProps>(
-                    {...defaultOption},
-                    e
-                );
-                transformedOptions.push(o);
-            })
-        }
 
         if(onValueChange){
-            onValueChange(prop.category, prop.value, transformedOptions);
+            onValueChange(category, prop.value, options[category]);
         }
     }
 
     const renderDropdownlist = () => {
-        return dropdownData.map((element, index)=>{
+        return dropdownData.map((element:DropdownMetadata, index)=>{
             return <Segment
                     key={index}
                     basic={!segmented}
@@ -90,7 +95,7 @@ const DropdownList: React.FC<Props> = (props)=>{
                     noResultsMessage={element.noResultsMessage}
                     options={element.options}
                     text={handleShowText(element.category)}
-                    onChange={handleValueChange}
+                    onChange={(e, prop)=>handleValueChange(element.category, e, prop)}
                     error={handleShowError(element.category)}
                     category={element.category}
                     />}

@@ -84,11 +84,8 @@ const getDevices = () => {
 }
 
 
-interface UesrSelectedData{
-    [key:string]: any|null,
-}
 //initial data for user selected data
-const initData:UesrSelectedData = {
+const initData:{[key:string]:any|null} = {
     model:null,
     type:null,
     company:null,
@@ -126,7 +123,7 @@ const dropdownData:DropdownMetadata[] = [
 const DeviceDispatch = () => {
 
     const [items, setItems] = useState<any|null>(getDevices());
-    const [data, setData] = useState<UesrSelectedData>(initData);
+    const [data, setData] = useState(initData);
     const [csvData, setCSVData] = useState<any>('');
     const [toggle, setToggle] = useState<boolean>(false);
     const {x} = useSpring({ 
@@ -137,9 +134,17 @@ const DeviceDispatch = () => {
         config:{duration:900} 
     });
 
-    const handleValueChange = (category:any, value:any, dropdownOptions:DropdownOption[]) => {
-        const selectedData = dropdownOptions.find(e=>e.value===value);
+    function handleValueChange(category:string, value:any, dropdownOptions:DropdownOption[]) {
+        const selectedData = dropdownOptions.find((e:DropdownOption)=>e.value===value);
         setData({...data, [category]:selectedData})
+    }
+
+    function handleShowText(category:string){
+        return data[category]?data[category].text:undefined
+    }
+
+    function handleShowError(category:string){
+        return data[category]?false:true
     }
 
     const handleClearAll = ()=>{
@@ -239,8 +244,8 @@ const DeviceDispatch = () => {
                     >
                         <DropdownList 
                         dropdownData={dropdownData}
-                        onShowText={(category:any)=>data[category]?data[category].text:null}
-                        onShowError={(category:any)=>data[category]?false:true}
+                        onShowText={handleShowText}
+                        onShowError={handleShowError}
                         onValueChange={handleValueChange}
                         />
                     </GroupList>
@@ -298,7 +303,7 @@ const DeviceDispatch = () => {
                 <CSVDownloadButton 
                 title='Download CSV File' 
                 csvData={csvData} 
-                outputFilename='DeviceMAC.csv' 
+                outputFilename='DeviceMAC.csv'
                 />
             </div>    
         </div>

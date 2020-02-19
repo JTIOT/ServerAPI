@@ -27,28 +27,6 @@ const GroupList: React.FC<Props> = (props)=>{
         headerColor='purple',
     } = props;
 
-    // return (
-    //     <Card>
-    //         <Card.Content>
-    //             <Card.Header>
-    //                 <Header 
-    //                 color={headerColor} 
-    //                 icon={headerIcon}
-    //                 content={header} 
-    //                 />
-    //             </Card.Header>
-    //             <Card.Meta>
-    //                 {subheader}
-    //             </Card.Meta>
-    //         </Card.Content>
-    //         <Card.Content>
-    //         {
-    //             children
-    //         }
-    //         </Card.Content>
-    //     </Card>
-    // );
-
     return (
 
         <Segment.Group
