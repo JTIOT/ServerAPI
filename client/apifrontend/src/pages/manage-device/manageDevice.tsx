@@ -1,9 +1,13 @@
 import React,{useState} from 'react';
 import faker from 'faker';
-import {Segment, Header, Button, Popup} from 'semantic-ui-react';
+import {Segment, Header, Button, Popup, Input} from 'semantic-ui-react';
+import {InputOnChangeData} from 'semantic-ui-react';
 import DropdownList, {DropdownOption, DropdownMetadata} from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
-import { useSpring, animated } from 'react-spring'
+
+import {
+    DateInput
+  } from 'semantic-ui-calendar-react';
 
 import classes from './manageDevice.module.scss';
 
@@ -48,11 +52,8 @@ const operatorOptions = () => {
     return operators;
 }
 
-interface UesrSelectedData{
-    [key:string]: any|null,
-}
 //initial data for user selected data
-const initData:UesrSelectedData = {
+const initData:{[key:string]:any|null} = {
     model:null,
     type:null,
     operator:null
@@ -82,27 +83,45 @@ const dropdownData:DropdownMetadata[] = [
 
 const ManageDeivce = ()=>{
 
-    const [data, setData] = useState<UesrSelectedData>(initData);
-    const [toggle, setToggle] = useState<boolean>(false);
-    const {x} = useSpring({ 
-        from:{x:0}, 
-        to:{x:toggle?1:0}, 
-        reset:true,
-        onRest:()=>setToggle(false), 
-        config:{duration:900} 
-    });
+    const [data, setData] = useState(initData);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [searchField, setSearchField] = useState('');
 
-    function handleValueChange(category:string, value:any, dropdownOptions:DropdownOption[]) {
+    const handleValueChange = (category:string, value:any, dropdownOptions:DropdownOption[])=>{
         const selectedData = dropdownOptions.find((e:DropdownOption)=>e.value===value);
         setData({...data, [category]:selectedData})
     }
 
-    function handleShowText(category:string){
+    const handleShowText = (category:string)=>{
         return data[category]?data[category].text:undefined
     }
 
-    function handleShowError(category:string){
+    const handleShowError = (category:string)=>{
         return data[category]?false:true
+    }
+
+    const handleStartDateChanged = (
+        _e:React.SyntheticEvent<HTMLElement, Event>,
+         data:any)=>{
+            console.log(data.value);
+            setStartDate(data.value);
+    }
+
+    const handleEndDateChanged = (
+        _e:React.SyntheticEvent<HTMLElement, Event>,
+         data:any
+         )=>{
+            console.log(data.value);
+            setEndDate(data.value);
+    }
+
+    const handleSearchFieldChanged = (
+        _e:React.ChangeEvent<HTMLInputElement>,
+         data:InputOnChangeData
+        )=>{
+            console.log(data.value);
+            setSearchField(data.value);
     }
 
     return (
@@ -132,6 +151,55 @@ const ManageDeivce = ()=>{
                     onValueChange={handleValueChange}
                     />
                 </GroupList>
+                {
+                (!data.model || !data.type || !data.operator)?
+                null
+                :
+                <GroupList
+                className={classes.query}
+                header='Query'
+                subheader='Query'
+                headerIcon='cog'
+                headerAlign='left'
+                >
+                    <Segment>
+                        <Header content='Start date' textAlign='left' />
+                        <DateInput
+                        name="dateTime"
+                        placeholder="Pick Start Date"
+                        value={startDate}
+                        iconPosition="left"
+                        onChange={handleStartDateChanged}
+                        closeOnMouseLeave={true}
+                        closable
+                        animation={'none' as any}
+                        hideMobileKeyboard
+                        />
+                    </Segment>
+                    <Segment>
+                        <Header content='End date' textAlign='left' />
+                        <DateInput
+                        name="dateTime"
+                        placeholder="Pick End Date"
+                        value={endDate}
+                        iconPosition="left"
+                        onChange={handleEndDateChanged}
+                        closeOnMouseLeave={true}
+                        closable
+                        animation={'none' as any}
+                        hideMobileKeyboard
+                        />
+                    </Segment>
+                    <Segment>
+                        <Header content='Search' textAlign='left' />
+                        <Input 
+                        icon='search'
+                        placeholder='Search...'
+                        onChange={handleSearchFieldChanged} 
+                        />
+                    </Segment>
+                </GroupList>
+                }
              </div>
         </div>
     );

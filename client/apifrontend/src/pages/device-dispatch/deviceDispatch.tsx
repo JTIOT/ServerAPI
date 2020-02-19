@@ -134,16 +134,16 @@ const DeviceDispatch = () => {
         config:{duration:900} 
     });
 
-    function handleValueChange(category:string, value:any, dropdownOptions:DropdownOption[]) {
+    const handleValueChange = (category:string, value:any, dropdownOptions:DropdownOption[])=>{
         const selectedData = dropdownOptions.find((e:DropdownOption)=>e.value===value);
         setData({...data, [category]:selectedData})
     }
 
-    function handleShowText(category:string){
+    const handleShowText = (category:string)=>{
         return data[category]?data[category].text:undefined
     }
 
-    function handleShowError(category:string){
+    const handleShowError = (category:string)=>{
         return data[category]?false:true
     }
 

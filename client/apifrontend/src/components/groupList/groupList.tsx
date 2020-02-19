@@ -1,5 +1,5 @@
 import React from 'react';
-import {Segment, Header, Card, SegmentGroup} from 'semantic-ui-react';
+import {Segment, Header, Card, SegmentGroup, CardContent} from 'semantic-ui-react';
 import {StrictHeaderProps} from 'semantic-ui-react';
 
 interface Props{

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dropdown, Segment} from 'semantic-ui-react';
+import {Dropdown, Segment, Divider} from 'semantic-ui-react';
 import {DropdownProps} from 'semantic-ui-react';
 
 /**

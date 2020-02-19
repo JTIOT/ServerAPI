@@ -1,33 +1,38 @@
 import React, {useState} from 'react';
+import {Input, InputOnChangeData} from 'semantic-ui-react';
 
 import classes from './inputField.module.scss';
 
 interface Props {
-    title?: string,
+    icon?: string,
     placeholder?: string,
     onValueChanged?: (value:string)=>void
 }
 
-const InputField: React.FC<Props> = ({title='', placeholder='', onValueChanged}) => {
+const InputField: React.FC<Props> = ({
+    icon='search', 
+    placeholder='Search...', 
+    onValueChanged
+}) => {
 
     const [value, setValue] = useState('');
 
-    const onValueChange = (e:any) => {
-        setValue(e.target.value);
+    const onValueChange = (
+        _e:React.ChangeEvent<HTMLInputElement>,
+         data:InputOnChangeData
+         ) => {
+        setValue(data.value);
         if(onValueChanged){
-            onValueChanged(e.target.value);
+            onValueChanged(value);
         }
     }
 
     return (
-        <div className={classes.overlay}>
-            <label className={classes.label}>{title}</label>
-            <input className={classes.input} 
-            placeholder={placeholder}
-            onChange={onValueChange}
-            value={value}
-             />
-        </div>
+        <Input 
+        icon='search'
+        placeholder={placeholder}
+        onChange={onValueChange} 
+        />
     );
 } 
 
