@@ -60,23 +60,21 @@ const DropdownList = <T extends Props>({
         options = {...options, [e.category]:e.options};
     })
 
-    function handleShowText(category:TCategory){
+    const handleShowText = (category:TCategory)=>{
         const text = onShowText(category);
         return text?text:undefined;
     }
 
-    function handleShowError(category:TCategory){
+    const handleShowError = (category:TCategory)=>{
         const value = onShowError(category);
         return value;
     }
 
-    function handleValueChange<V,K extends DropdownProps>(
+    const handleValueChange = <V,K extends DropdownProps>(
         category:TCategory,
         e:V,
          prop:K
-         ){
-
-
+         )=>{
         if(onValueChange){
             onValueChange(category, prop.value, options[category]);
         }
