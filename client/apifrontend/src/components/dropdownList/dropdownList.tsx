@@ -34,7 +34,8 @@ interface Props{
     V extends any,
     K extends DropdownOption>(category:T, value:V, options:K[])=>void,
     onShowError: <T extends TCategory>(category:T)=>boolean,
-    onShowText: <T extends TCategory>(category:T)=>string|undefined
+    onShowText: <T extends TCategory>(category:T)=>string|undefined,
+    [x:string]: any
 }
 
 /**
