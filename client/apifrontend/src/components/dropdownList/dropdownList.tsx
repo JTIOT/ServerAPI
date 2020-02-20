@@ -39,6 +39,7 @@ interface Props{
 
 /**
  * DropdownList render a list of dropdown component
+ * DropdownList manage all options for each dropdown
  * @param {boolean} segmented each dropdown is segmented
  * @param {Array<DropdownMetadata>} dropdownData an array of DropdownMetadata define how
  * many dropdown will be rendered
@@ -60,19 +61,19 @@ const DropdownList = <T extends Props>({
         options = {...options, [e.category]:e.options};
     })
 
-    const handleShowText = (category:TCategory)=>{
+    const handleShowText = <T extends TCategory>(category:T)=>{
         const text = onShowText(category);
         return text?text:undefined;
     }
 
-    const handleShowError = (category:TCategory)=>{
+    const handleShowError = <T extends TCategory>(category:T)=>{
         const value = onShowError(category);
         return value;
     }
 
     const handleValueChange = <V,K extends DropdownProps>(
         category:TCategory,
-        e:V,
+        _e:V,
          prop:K
          )=>{
         if(onValueChange){
