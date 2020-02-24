@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import faker from 'faker';
 import {Segment, Header, Button, Popup, Input} from 'semantic-ui-react';
 import {InputOnChangeData} from 'semantic-ui-react';
@@ -12,6 +12,7 @@ import {
   } from 'semantic-ui-calendar-react';
 
 import classes from './manageDevice.module.scss';
+import { setTimeout } from 'timers';
 
 const modelOptions = () => {
     let models = [];
@@ -54,12 +55,13 @@ const operatorOptions = () => {
     return operators;
 }
 
+interface Records{ 
+    headers:Array<string>,
+    records:Array<Array<string>>
+}
 const getRecords = ()=>{
 
-    let ret : {
-        headers:Array<string>,
-        records:Array<Array<string>>
-    } = {
+    let ret : Records = {
         headers:[
         'Comanpany',
         'Product Name',
@@ -68,7 +70,7 @@ const getRecords = ()=>{
         'Currency Name',
         'Product Material'
         ],
-        records:[]
+        records:[],
     }
 
     console.log(faker);
@@ -144,7 +146,8 @@ const renderDropdownList = (
 const renderQuery = (
     date: string,
     dateChangeHandler: any,
-    searchFieldChangeHandler: any
+    searchFieldChangeHandler: any,
+    searching:boolean
     )=>{
         return(
             <GroupList
@@ -173,6 +176,7 @@ const renderQuery = (
                     <Input 
                     icon='search'
                     placeholder='Search...'
+                    loading={searching}
                     onChange={searchFieldChangeHandler} 
                     />
                 </Segment>
@@ -186,12 +190,42 @@ const renderRecords = (records:any)=>{
     return <Datatable headers={records.headers} records={records.records} />;
 }
 
+const filterRecords = async (records:string[][], keyword:string)=>{
+    if(!keyword) return  records;
+    
+    return records.filter(record=>{
+        for(let i=0; i<record.length; i++){
+            if(record[i].includes(keyword)) return true;
+        }
+        return false;
+    })
+    
+}
+
+const allRecords = getRecords();
+
 const ManageDeivce = ()=>{
 
     const [data, setData] = useState(initData);
     const [date, setDate] = useState('');
     const [searchField, setSearchField] = useState('');
-    const [records, setRecrods] = useState(getRecords());
+    const [records, setRecrods] = useState<Records|null>(null);
+    const [searching, setSearching] = useState(false);
+
+    useEffect(()=>{
+        if(!data.model || !data.type || !data.operator || !date){ 
+            return;
+        }
+
+        setSearching(true);
+        filterRecords(allRecords.records, searchField)
+        .then(resData=>{
+            let initRecords = getRecords();
+            initRecords.records = resData;
+            setSearching(false);
+            setRecrods(initRecords);
+        })
+    },[searchField, date])
 
     const handleValueChange = (category:string, value:any, dropdownOptions:DropdownOption[])=>{
         const selectedData = dropdownOptions.find((e:DropdownOption)=>e.value===value);
@@ -249,15 +283,13 @@ const ManageDeivce = ()=>{
                     renderQuery(
                         date,
                         handleDateChanged,
-                        handleSearchFieldChanged
+                        handleSearchFieldChanged,
+                        searching
                     )
                 }
              </div>
              <div className={classes.table}>
              {
-                 (!data.model || !data.type || !data.operator) || !date?
-                 null
-                 :
                  renderRecords(records)
              }
              </div>
