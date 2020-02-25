@@ -5,6 +5,8 @@ import {InputOnChangeData} from 'semantic-ui-react';
 import DropdownList, {DropdownOption, DropdownMetadata} from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
 import Datatable from '../../components/datatable/datatable';
+import {Subject} from 'rxjs';
+import {debounceTime, map} from 'rxjs/operators'
 
 import {
     DateInput,
@@ -73,7 +75,6 @@ const getRecords = ()=>{
         records:[],
     }
 
-    console.log(faker);
     for(let i=0; i<100; i++){
         const record = [
             faker.company.companyName(),
@@ -204,6 +205,8 @@ const filterRecords = async (records:string[][], keyword:string)=>{
 
 const allRecords = getRecords();
 
+const subject = new Subject<string>();
+
 const ManageDeivce = ()=>{
 
     const [data, setData] = useState(initData);
@@ -218,14 +221,35 @@ const ManageDeivce = ()=>{
         }
 
         setSearching(true);
-        filterRecords(allRecords.records, searchField)
-        .then(resData=>{
-            let initRecords = getRecords();
-            initRecords.records = resData;
-            setSearching(false);
-            setRecrods(initRecords);
-        })
+        subject.next(searchField);
+
+        // setSearching(true);
+        // filterRecords(allRecords.records, searchField)
+        // .then(resData=>{
+        //     let initRecords = getRecords();
+        //     initRecords.records = resData;
+        //     setSearching(false);
+        //     setRecrods(initRecords);
+        // })
     },[searchField, date])
+
+    useEffect(()=>{
+        subject
+        .pipe(
+            map(async (keyword)=>{
+                const resData = await filterRecords(allRecords.records, keyword);
+                let initRecords = getRecords();
+                initRecords.records = resData;
+                return initRecords;
+            }),
+            debounceTime(1000),
+        )
+        .subscribe(async (newRecords)=>{
+            setSearching(false);
+            const result = await newRecords;
+            setRecrods(result);
+        })
+    }, [])
 
     const handleValueChange = (category:string, value:any, dropdownOptions:DropdownOption[])=>{
         const selectedData = dropdownOptions.find((e:DropdownOption)=>e.value===value);
@@ -251,7 +275,6 @@ const ManageDeivce = ()=>{
         _e:React.ChangeEvent<HTMLInputElement>,
          data:InputOnChangeData
         )=>{
-            console.log(data.value);
             setSearchField(data.value);
     }
 
