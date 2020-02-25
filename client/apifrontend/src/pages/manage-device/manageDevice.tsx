@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from 'react';
 import faker from 'faker';
-import {Segment, Header, Button, Popup, Input} from 'semantic-ui-react';
+import {Segment, Header, Input} from 'semantic-ui-react';
 import {InputOnChangeData} from 'semantic-ui-react';
 import DropdownList, {DropdownOption, DropdownMetadata} from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
@@ -9,12 +9,10 @@ import {Subject} from 'rxjs';
 import {debounceTime, map} from 'rxjs/operators'
 
 import {
-    DateInput,
     DatesRangeInput
   } from 'semantic-ui-calendar-react';
 
 import classes from './manageDevice.module.scss';
-import { setTimeout } from 'timers';
 
 const modelOptions = () => {
     let models = [];
@@ -75,7 +73,7 @@ const getRecords = ()=>{
         records:[],
     }
 
-    for(let i=0; i<100; i++){
+    for(let i=0; i<1000; i++){
         const record = [
             faker.company.companyName(),
             faker.commerce.productName(),
@@ -221,32 +219,25 @@ const ManageDeivce = ()=>{
         }
 
         setSearching(true);
+        //publish search keyword
         subject.next(searchField);
 
-        // setSearching(true);
-        // filterRecords(allRecords.records, searchField)
-        // .then(resData=>{
-        //     let initRecords = getRecords();
-        //     initRecords.records = resData;
-        //     setSearching(false);
-        //     setRecrods(initRecords);
-        // })
     },[searchField, date])
 
     useEffect(()=>{
         subject
         .pipe(
+            debounceTime(1000),
             map(async (keyword)=>{
                 const resData = await filterRecords(allRecords.records, keyword);
                 let initRecords = getRecords();
                 initRecords.records = resData;
                 return initRecords;
             }),
-            debounceTime(1000),
         )
         .subscribe(async (newRecords)=>{
+            const result = await newRecords
             setSearching(false);
-            const result = await newRecords;
             setRecrods(result);
         })
     }, [])
@@ -275,6 +266,7 @@ const ManageDeivce = ()=>{
         _e:React.ChangeEvent<HTMLInputElement>,
          data:InputOnChangeData
         )=>{
+            setRecrods(null);
             setSearchField(data.value);
     }
 
