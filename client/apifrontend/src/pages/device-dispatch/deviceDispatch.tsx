@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import faker from 'faker';
 import {Segment, Header, Button, Popup} from 'semantic-ui-react';
 import Item from '../../components/Item/Item';
@@ -120,9 +120,35 @@ const dropdownData:DropdownMetadata[] = [
     }
 ]
 
+let scannedQRCode = '';
+
+const stripMAC = (qrcodeURL:string)=>{
+
+    const tightCode = qrcodeURL.split('/').pop();
+    let qrcode = '';
+    if(tightCode){
+        for(let i=0; i<tightCode.length; i+=2){
+            const partial = tightCode.substr(i, 2);
+            if(i===0){
+                qrcode += partial;
+            }
+            else{
+                qrcode += ':'+ partial;
+            }
+        }
+    }
+    return qrcode;
+}
+
+interface Item{
+    key:number|string,
+    text:string,
+    value:any
+}
+
 const DeviceDispatch = () => {
 
-    const [items, setItems] = useState<any|null>(getDevices());
+    const [items, setItems] = useState<Item[]|[]>([]);
     const [data, setData] = useState(initData);
     const [csvData, setCSVData] = useState<any>('');
     const [toggle, setToggle] = useState<boolean>(false);
@@ -133,6 +159,28 @@ const DeviceDispatch = () => {
         onRest:()=>setToggle(false), 
         config:{duration:900} 
     });
+
+    const onKeyPress = useCallback((e:KeyboardEvent)=>{
+        if(e.key === 'Enter')
+        {
+            console.log(items);
+            const qrcode = stripMAC(scannedQRCode);
+            scannedQRCode = '';
+            const key = items.length;
+            // console.log([...items, {key:key, text:qrcode, value:qrcode}]);
+            setItems([...items, {key:key, text:qrcode, value:qrcode}]);
+            return;
+        }
+
+        scannedQRCode += e.key;
+    }, [])
+
+    useEffect(()=>{
+        window.addEventListener('keypress', onKeyPress);
+        return () => {
+            window.removeEventListener('keypress', onKeyPress);
+        };
+    }, [onkeypress])
 
     const handleValueChange = (category:string, value:any, dropdownOptions:DropdownOption[])=>{
         const selectedData = dropdownOptions.find((e:DropdownOption)=>e.value===value);
@@ -148,7 +196,7 @@ const DeviceDispatch = () => {
     }
 
     const handleClearAll = ()=>{
-        setItems(null);
+        setItems([]);
     }
 
     const createCSVData = async ()=>{
@@ -290,6 +338,7 @@ const DeviceDispatch = () => {
                             onReadCSV={handleImportCSV}
                             onError={handleImportCSVError}
                             />
+                            <Header color='red' content='Scan device with QRCode scanner' />
                         </Segment>
                     }
                 </GroupList>
