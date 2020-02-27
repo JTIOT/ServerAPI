@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import faker from 'faker';
-import {Segment, Header, Button, Popup} from 'semantic-ui-react';
+import {Segment, Header, Button, Popup, Divider} from 'semantic-ui-react';
 import Item from '../../components/Item/Item';
 import DropdownList, {DropdownOption, DropdownMetadata} from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
@@ -120,7 +120,7 @@ const dropdownData:DropdownMetadata[] = [
     }
 ]
 
-let scannedQRCode = '';
+let qrcodeInputKey = '';
 
 const stripMAC = (qrcodeURL:string)=>{
 
@@ -140,18 +140,14 @@ const stripMAC = (qrcodeURL:string)=>{
     return qrcode;
 }
 
-interface Item{
-    key:number|string,
-    text:string,
-    value:any
-}
 
 const DeviceDispatch = () => {
 
-    const [items, setItems] = useState<Item[]|[]>([]);
+    const [items, setItems] = useState<any[]>([]);
     const [data, setData] = useState(initData);
     const [csvData, setCSVData] = useState<any>('');
     const [toggle, setToggle] = useState<boolean>(false);
+    const [scannedQRCode, setScannedQRCode] = useState('');
     const {x} = useSpring({ 
         from:{x:0}, 
         to:{x:toggle?1:0}, 
@@ -164,15 +160,16 @@ const DeviceDispatch = () => {
         if(e.key === 'Enter')
         {
             console.log(items);
-            const qrcode = stripMAC(scannedQRCode);
-            scannedQRCode = '';
-            const key = items.length;
+            const qrcode = stripMAC(qrcodeInputKey);
+            // const key = items.length;
             // console.log([...items, {key:key, text:qrcode, value:qrcode}]);
-            setItems([...items, {key:key, text:qrcode, value:qrcode}]);
+            // setItems([...items, {key:key, text:qrcode, value:qrcode}]);
+            setScannedQRCode(qrcode);
+            qrcodeInputKey = '';
             return;
         }
 
-        scannedQRCode += e.key;
+        qrcodeInputKey += e.key;
     }, [])
 
     useEffect(()=>{
@@ -181,6 +178,27 @@ const DeviceDispatch = () => {
             window.removeEventListener('keypress', onKeyPress);
         };
     }, [onkeypress])
+
+    useEffect(()=>{
+        const found = items.find(i=>{
+            return i.value === scannedQRCode;
+        })
+
+        if(found){
+            console.log(`${scannedQRCode} is in the list`);
+            return;
+        }
+
+        if(scannedQRCode){
+            const key = items.length;
+            setItems([...items, {
+                key:key, 
+                text:scannedQRCode, 
+                value:scannedQRCode
+            }]);
+        }
+
+    }, [scannedQRCode])
 
     const handleValueChange = (category:string, value:any, dropdownOptions:DropdownOption[])=>{
         const selectedData = dropdownOptions.find((e:DropdownOption)=>e.value===value);
@@ -338,6 +356,7 @@ const DeviceDispatch = () => {
                             onReadCSV={handleImportCSV}
                             onError={handleImportCSVError}
                             />
+                            <Divider horizontal>OR</Divider>
                             <Header color='red' content='Scan device with QRCode scanner' />
                         </Segment>
                     }
