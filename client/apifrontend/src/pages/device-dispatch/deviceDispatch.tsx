@@ -8,7 +8,6 @@ import CSVReaderButton from '../../components/csvReaderButton/csvReaderButton';
 import CSVDownloadButton from '../../components/csvDownloadButton/csvDownloadButton';
 
 import classes from './deviceDispatch.module.scss';
-import { bool } from 'prop-types';
 
 const modelOptions = () => {
     let models = [];
