@@ -36,8 +36,8 @@ const GroupList: React.FC<Props> = (props)=>{
 
     return (
         <animated.div style={{transform:scale.interpolate({
-            range: [0, 0.15, 0.35, 0.45, 0.55, 0.65, 0.75, 0.9, 1],
-            output: [0, 0.3, 0.5, 0.9, 1.1, 1.2, 1.1, 0.9, 1]
+            range: [0, 0.18, 0.28, 0.35, 0.44, 0.55, 0.65, 0.75, 0.9, 1],
+            output: [0, 0.2, 0.3, 0.5, 0.9, 1.1, 1.2, 1.1, 0.9, 1]
         }).interpolate((s: any)=>`scale(${s})`)
         }}>
         <Segment.Group
