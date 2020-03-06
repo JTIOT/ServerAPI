@@ -1,5 +1,5 @@
-import React from 'react';
-import {Dropdown, Segment, Divider} from 'semantic-ui-react';
+import React, { useRef } from 'react';
+import {Dropdown, Segment, Grid} from 'semantic-ui-react';
 import {DropdownProps} from 'semantic-ui-react';
 
 /**
@@ -49,7 +49,7 @@ interface Props{
  * @param {fucntion} onShowText a callback ask for dropdown selected text for display purpose
  */ 
 const DropdownList = <T extends Props>({
-    segmented=true,
+    segmented=false,
     dropdownData,
     onValueChange,
     onShowError,
@@ -72,43 +72,48 @@ const DropdownList = <T extends Props>({
         return value;
     }
 
-    const handleValueChange = <V,K extends DropdownProps>(
+    const handleValueChange = <V extends  React.SyntheticEvent<HTMLElement, Event>,
+    K extends DropdownProps>(
         category:TCategory,
         _e:V,
-         prop:K
+         data:K
          )=>{
-        if(onValueChange){
-            onValueChange(category, prop.value, options[category]);
-        }
+            if(onValueChange){
+                onValueChange(category, data.value, options[category]);
+            }
     }
 
     const renderDropdownlist = () => {
-        return dropdownData.map((element:DropdownMetadata, index)=>{
+        return <div>
+        {
+        dropdownData.map((element:DropdownMetadata, index)=>{
             return <Segment
                     key={index}
                     basic={!segmented}
-                    content={<Dropdown 
-                    placeholder={element.placeholder}
-                    selection
-                    search
-                    button
-                    noResultsMessage={element.noResultsMessage}
-                    options={element.options}
-                    text={handleShowText(element.category)}
-                    onChange={(e, prop)=>handleValueChange(element.category, e, prop)}
-                    error={handleShowError(element.category)}
-                    category={element.category}
-                    />}
-                />
+                    >
+                        <Dropdown 
+                        placeholder={element.placeholder}
+                        selection
+                        search
+                        closeOnChange={true}
+                        deburr={true}
+                        noResultsMessage={element.noResultsMessage}
+                        options={element.options}
+                        text={handleShowText(element.category)}
+                        onChange={(e, data)=>handleValueChange(element.category, e, data)}
+                        error={handleShowError(element.category)}
+                        category={element.category}
+                        selectOnBlur={false}
+                        selectOnNavigation={false}
+                        />
+                    </Segment>
         })
+        }
+        </div>
+        
     }
-    return (
-        <React.Fragment>
-            {
-                renderDropdownlist()
-            }
-        </React.Fragment>
-    );
+
+    return renderDropdownlist()
 }
 
 export default DropdownList;

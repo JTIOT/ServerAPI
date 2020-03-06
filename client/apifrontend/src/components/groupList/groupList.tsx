@@ -42,9 +42,11 @@ const GroupList: React.FC<Props> = (props)=>{
                 subheader={subheader} 
                 />
             </Segment>
+            <Segment>
             {
                 children
             }
+            </Segment>
         </Segment.Group>
 
     );

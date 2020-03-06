@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React from 'react';
 import faker from 'faker';
 import {Segment, Header, Button, Popup, Divider} from 'semantic-ui-react';
 import Item from '../../components/Item/Item';
@@ -6,9 +6,9 @@ import DropdownList, {DropdownOption, DropdownMetadata} from '../../components/d
 import GroupList from '../../components/groupList/groupList';
 import CSVReaderButton from '../../components/csvReaderButton/csvReaderButton';
 import CSVDownloadButton from '../../components/csvDownloadButton/csvDownloadButton';
-import { useSpring, animated } from 'react-spring'
 
 import classes from './deviceDispatch.module.scss';
+import { bool } from 'prop-types';
 
 const modelOptions = () => {
     let models = [];
@@ -83,13 +83,23 @@ const getDevices = () => {
 
 }
 
+interface IData{
+    [key:string]:any|null
+}
+
+interface IState{
+    items: any[],
+    data: IData,
+    csvData: null|any[][],
+    scanning: boolean,
+}
 
 //initial data for user selected data
-const initData:{[key:string]:any|null} = {
+const initData:IData = {
     model:null,
     type:null,
     company:null,
-    recipient:null
+    recipient:null,
 }
 
 //data for each dropdown
@@ -120,104 +130,114 @@ const dropdownData:DropdownMetadata[] = [
     }
 ]
 
-let qrcodeInputKey = '';
 
-const stripMAC = (qrcodeURL:string)=>{
 
-    const tightCode = qrcodeURL.split('/').pop();
-    let qrcode = '';
-    if(tightCode){
-        for(let i=0; i<tightCode.length; i+=2){
-            const partial = tightCode.substr(i, 2);
-            if(i===0){
-                qrcode += partial;
-            }
-            else{
-                qrcode += ':'+ partial;
-            }
-        }
+
+
+class DeviceDispatch extends React.Component<{}, IState> {
+
+
+    state = {
+        items: [],
+        data: initData,
+        csvData: null,
+        toggle: false,
+        scanning: false,
     }
-    return qrcode;
-}
 
+    qrcodeInputKey = '';
 
-const DeviceDispatch = () => {
+    onKeyPress = (e:KeyboardEvent)=>{
 
-    const [items, setItems] = useState<any[]>([]);
-    const [data, setData] = useState(initData);
-    const [csvData, setCSVData] = useState<any>('');
-    const [toggle, setToggle] = useState<boolean>(false);
-    const [scannedQRCode, setScannedQRCode] = useState('');
-    const {x} = useSpring({ 
-        from:{x:0}, 
-        to:{x:toggle?1:0}, 
-        reset:true,
-        onRest:()=>setToggle(false), 
-        config:{duration:900} 
-    });
+        if(!this.state.scanning) return;
 
-    const onKeyPress = useCallback((e:KeyboardEvent)=>{
         if(e.key === 'Enter')
         {
-            console.log(items);
-            const qrcode = stripMAC(qrcodeInputKey);
-            // const key = items.length;
-            // console.log([...items, {key:key, text:qrcode, value:qrcode}]);
-            // setItems([...items, {key:key, text:qrcode, value:qrcode}]);
-            setScannedQRCode(qrcode);
-            qrcodeInputKey = '';
-            return;
-        }
+            const {items} = this.state;
 
-        qrcodeInputKey += e.key;
-    }, [])
-
-    useEffect(()=>{
-        window.addEventListener('keypress', onKeyPress);
-        return () => {
-            window.removeEventListener('keypress', onKeyPress);
-        };
-    }, [onkeypress])
-
-    useEffect(()=>{
-        const found = items.find(i=>{
-            return i.value === scannedQRCode;
-        })
-
-        if(found){
-            console.log(`${scannedQRCode} is in the list`);
-            return;
-        }
-
-        if(scannedQRCode){
+            console.log(this.state.items);
+            const qrcode = this.stripMAC(this.qrcodeInputKey);
+            
+            const found = items.find((i: { value: any; })=>{
+                return i.value === qrcode;
+            })
+    
+            if(found){
+                console.log(`${qrcode} is in the list`);
+                return;
+            }
+    
             const key = items.length;
-            setItems([...items, {
+            let newItems: any[] = [...items];
+            newItems.unshift({
                 key:key, 
-                text:scannedQRCode, 
-                value:scannedQRCode
-            }]);
+                text:qrcode, 
+                value:qrcode
+            });
+            this.setState({...this.state, items:newItems});
+
+            this.qrcodeInputKey = '';
+            return;
         }
 
-    }, [scannedQRCode])
-
-    const handleValueChange = (category:string, value:any, dropdownOptions:DropdownOption[])=>{
-        const selectedData = dropdownOptions.find((e:DropdownOption)=>e.value===value);
-        setData({...data, [category]:selectedData})
+        this.qrcodeInputKey += e.key;
     }
 
-    const handleShowText = (category:string)=>{
+
+    componentDidMount(){
+        window.addEventListener('keypress', this.onKeyPress);
+        
+    }
+
+    componentWillUnmount(){
+        window.removeEventListener('keypress', this.onKeyPress);
+    }
+
+    validateData(inData:IData){
+        return (inData.model && inData.type && inData.company && inData.recipient) !== null;
+    }
+    
+    stripMAC = (qrcodeURL:string)=>{
+
+        const tightCode = qrcodeURL.split('/').pop();
+        let qrcode = '';
+        if(tightCode){
+            for(let i=0; i<tightCode.length; i+=2){
+                const partial = tightCode.substr(i, 2);
+                if(i===0){
+                    qrcode += partial;
+                }
+                else{
+                    qrcode += ':'+ partial;
+                }
+            }
+        }
+        return qrcode;
+    }
+
+    handleValueChange = (category:string, value:any, dropdownOptions:DropdownOption[])=>{
+        const {data} = this.state;
+        const selectedData = dropdownOptions.find((e:DropdownOption)=>e.value===value);
+        this.setState({...this.state, data:{...data, [category]:selectedData}})
+    }
+
+    handleShowText = (category:string)=>{
+        const {data} = this.state;
         return data[category]?data[category].text:undefined
     }
 
-    const handleShowError = (category:string)=>{
+    handleShowError = (category:string)=>{
+        const {data} = this.state;
         return data[category]?false:true
     }
 
-    const handleClearAll = ()=>{
-        setItems([]);
+    handleClearAll = ()=>{
+        this.setState({...this.state, items:[]});
     }
 
-    const createCSVData = async ()=>{
+    createCSVData = async ()=>{
+        const {items} = this.state;
+
         if(items && items.length>0)
         {
             let csv = items.map((i:any)=>{
@@ -229,19 +249,17 @@ const DeviceDispatch = () => {
         return null;
     }
 
-    const handleOutput = async ()=>{
+    handleOutput = async ()=>{
+        const {data, items} = this.state;
+
         console.log(data, items);
-        
-        if(!(data.model && data.type && data.company && data.recipient)){
-            setToggle(true);
-            return
-        }
-        const csv = await createCSVData();
+
+        const csv = await this.createCSVData();
         console.log(csv);
-        csv?setCSVData(csv):setCSVData(null);
+        csv?this.setState({...this.state, csvData:csv}):this.setState({...this.state, csvData:null});
     }
 
-    const handleImportCSV = (inData:any) => {
+    handleImportCSV = (inData:any) => {
         console.log(inData);
 
         const transformedData = inData.map((e:any, i:number)=>{
@@ -252,28 +270,35 @@ const DeviceDispatch = () => {
             }
         });
 
-        setItems(transformedData);
+        this.setState({...this.state, items:transformedData});
     }
 
-    const handleImportCSVError = (error:any) =>{
+    handleImportCSVError = (error:any) =>{
         console.log('read csv fail', error);
     }
+
+    handleStartScanning = ()=>{
+        if(!this.validateData(this.state.data)) return;
+        this.setState({...this.state, scanning:true});
+    }
     
-    const handleItemDelete = (dataIndex:any) => {
+    handleItemDelete = (dataIndex:any) => {
+        const {items} = this.state;
 
         const i = items.splice(dataIndex, 1);
         console.log('Delete item',i);
-        setItems([...items]);
+        this.setState({...this.state, items:[...items]})
     }
 
-    const renderItems = () => {
-    
+    renderItems = () => {
+        const {items} = this.state;
+
         return items.map((item:any, index:number)=>{
             return <Item 
             key={index} 
             dataIndex={index} 
             title={item.text} 
-            onDelete={handleItemDelete} 
+            onDelete={this.handleItemDelete} 
             labelTitle={`${index+1}`}
             labelPosition='left'
             labelPointer='right'
@@ -281,26 +306,22 @@ const DeviceDispatch = () => {
         });
     }
 
-    return (
-        <div className={classes.overlay}>
-            <Header 
-            icon='exchange' 
-            color='purple'
-            content='Dispatch management' 
-            subheader='Manage your dispatch' 
-            size='large'
-            />
-            <div className={classes.content}>
-                {
-                    //dropdown menu
-                }
-                <animated.div style={{
-                    transform:x.interpolate({
-                        range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
-                        output: [1, 0.97, 0.9, 1.1, 0.9, 1.1, 1.03, 1]
-                    })
-                    .interpolate((x:any)=>`scale(${x})`)
-                }}>
+    render(){
+        const {data, items, csvData, scanning} = this.state;
+
+        return (
+            <div className={classes.overlay}>
+                <Header 
+                icon='exchange' 
+                color='purple'
+                content='Dispatch management' 
+                subheader='Manage your dispatch' 
+                size='large'
+                />
+                <div className={classes.content}>
+                    {
+                        //dropdown menu
+                    }
                     <GroupList
                     className={classes.selection}
                     header='Management'
@@ -310,72 +331,90 @@ const DeviceDispatch = () => {
                     >
                         <DropdownList 
                         dropdownData={dropdownData}
-                        onShowText={handleShowText}
-                        onShowError={handleShowError}
-                        onValueChange={handleValueChange}
+                        onShowText={this.handleShowText}
+                        onShowError={this.handleShowError}
+                        onValueChange={this.handleValueChange}
                         />
                     </GroupList>
-                </animated.div>
-                {
-                    //scanned device list
-                }
-                <GroupList
-                className={classes.deviceList}
-                header='Devices'
-                subheader='Scanned devices'
-                headerIcon='tablet'
-                headerAlign='left'
-                headerColor='purple'
-                >
-                    {//clear all button
-                        items && items.length>0?
-                        <Segment>
+                    {
+                        //scanned device list
+                    }
+                    {
+                    data === null || !this.validateData(data)?
+                    null
+                    :
+                    <GroupList
+                    className={classes.deviceList}
+                    header='Devices'
+                    subheader='Scanned devices'
+                    headerIcon='tablet'
+                    headerAlign='left'
+                    headerColor='purple'
+                    >
+                        {//clear all button
+                            items && items.length>0?
                             <Button
-                            className={classes.clearBtn} 
-                            icon='delete'
-                            color='red' 
-                            content='Clear all'
-                            onClick={handleClearAll}
-                            />
-                        </Segment>
-                        :
-                        null
-                    }
-                    {//list of device or import from scv
-                        items!==null && items.length>0?
-                        <Segment className={classes.itemGroup}>
-                        {
-                            renderItems()
+                                className={classes.clearBtn} 
+                                icon='delete'
+                                color='red' 
+                                content='Clear all'
+                                onClick={this.handleClearAll}
+                                />
+                            :
+                            null
                         }
-                        </Segment>
-                        :
-                        <Segment placeholder>
-                            <Header color='red' content='There is no device. Scan your deivce to start' />
-                            <CSVReaderButton 
-                            title='Import csv'
-                            onReadCSV={handleImportCSV}
-                            onError={handleImportCSVError}
-                            />
-                            <Divider horizontal>OR</Divider>
-                            <Header color='red' content='Scan device with QRCode scanner' />
-                        </Segment>
+                        {//list of device or import from scv
+                            items!==null && items.length>0 || scanning?
+                            <div className={classes.itemGroup}>
+                                {
+                                this.renderItems()
+                                }
+                            </div>
+                            :
+                            <Segment placeholder>
+                                <div>
+                                    <Header color='red' content='Import CSV file' />
+                                    <CSVReaderButton 
+                                    title='Import csv'
+                                    onReadCSV={this.handleImportCSV}
+                                    onError={this.handleImportCSVError}
+                                    />
+                                </div>
+                                <div>
+                                    <Divider horizontal>OR</Divider>
+                                </div>
+                                <div>
+                                    <Header color='red' content='Scan device with QRCode scanner' />
+                                    <Button 
+                                    content='Start scanning' 
+                                    onClick={this.handleStartScanning} 
+                                    />
+                                </div>
+                            </Segment>
+                        }
+                    </GroupList>
                     }
-                </GroupList>
-            </div> 
-            <div className={classes.buttonGroup}>
-                <Popup trigger={    
-                    <Button primary content='Output' onClick={handleOutput} />
-                }>
-                    Output your result in console and download your csv file
-                </Popup>
-                <CSVDownloadButton 
-                title='Download CSV File' 
-                csvData={csvData} 
-                outputFilename='DeviceMAC.csv'
-                />
-            </div>    
-        </div>
-    );
+                </div> 
+                {
+                items.length === 0?
+                null
+                :
+                <div className={classes.buttonGroup}>
+                    <Popup trigger={    
+                        <Button primary content='Output' onClick={this.handleOutput} />
+                    }>
+                        Output your result in console and download your csv file
+                    </Popup>
+                    <CSVDownloadButton 
+                    title='Download CSV File' 
+                    csvData={csvData} 
+                    outputFilename='DeviceMAC.csv'
+                    />
+                </div>    
+                }
+            </div>
+        );
+    }
 }
 
 export default DeviceDispatch;
