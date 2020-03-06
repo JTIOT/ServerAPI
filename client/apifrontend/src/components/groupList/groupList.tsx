@@ -1,6 +1,7 @@
 import React from 'react';
-import {Segment, Header, Card, SegmentGroup, CardContent} from 'semantic-ui-react';
+import {Segment, Header} from 'semantic-ui-react';
 import {StrictHeaderProps} from 'semantic-ui-react';
+import { useSpring, animated } from 'react-spring';
 
 interface Props{
     children?: any,
@@ -27,8 +28,18 @@ const GroupList: React.FC<Props> = (props)=>{
         headerColor='purple',
     } = props;
 
-    return (
+    const {scale} = useSpring({
+        from: {scale: 0.1},
+        to: {scale: 1},
+        config: {duration: 500}
+    })
 
+    return (
+        <animated.div style={{transform:scale.interpolate({
+            range: [0, 0.15, 0.35, 0.45, 0.55, 0.65, 0.75, 0.9, 1],
+            output: [0, 0.3, 0.5, 0.9, 1.1, 1.2, 1.1, 0.9, 1]
+        }).interpolate((s: any)=>`scale(${s})`)
+        }}>
         <Segment.Group
         className={className} 
         compact
@@ -48,7 +59,7 @@ const GroupList: React.FC<Props> = (props)=>{
             }
             </Segment>
         </Segment.Group>
-
+        </animated.div>
     );
 }
 
