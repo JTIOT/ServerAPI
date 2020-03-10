@@ -215,7 +215,7 @@ class DeviceDispatch extends React.Component<{}, IState> {
     }
 
     handleClearAll = ()=>{
-        this.setState({...this.state, items:[]});
+        this.setState({...this.state, items:[], scanning:false});
     }
 
     createCSVData = async ()=>{
