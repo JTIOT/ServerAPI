@@ -3,6 +3,11 @@
 
     },
     "DeviceDispatch":{
-        "Management":"管理"
+        "Title": "出庫管裡",
+        "Subtitle": "管理你的出庫",
+        "Management":{
+            "Title":"派送管理",
+            "Subtitle":"管理你的派送"
+        }
     }
 }

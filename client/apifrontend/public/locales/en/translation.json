@@ -3,6 +3,11 @@
 
     },
     "DeviceDispatch":{
-        "Management":"Management"
+        "Title":"Dispatch Management",
+        "Subtitle": "Manage your dispatch",
+        "Management":{
+            "Title":"Management",
+            "Subtitle":"Manage your delivery"
+        }
     }
 }

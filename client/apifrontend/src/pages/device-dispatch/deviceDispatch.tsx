@@ -281,8 +281,8 @@ class DeviceDispatch extends React.Component<IProps, IState> {
         return (
             <GroupList
             className={classes.selection}
-            header={t('DeviceDispatch.Management')}
-            subheader='Manage your delivery'
+            header={t('DeviceDispatch.Management.Title')}
+            subheader={t('DeviceDispatch.Management.Subtitle')}
             headerIcon='cog'
             headerAlign='left'
             >
@@ -376,14 +376,15 @@ class DeviceDispatch extends React.Component<IProps, IState> {
 
     render(){
         const {data, items, scanning} = this.state;
+        const {t} = this.props;
 
         return (
             <div className={classes.overlay}>
                 <Header 
                 icon='exchange' 
                 color='purple'
-                content='Dispatch management' 
-                subheader='Manage your dispatch' 
+                content={t('DeviceDispatch.Title')} 
+                subheader={t('DeviceDispatch.Subtitle')} 
                 size='large'
                 />
                 <div className={classes.content}>

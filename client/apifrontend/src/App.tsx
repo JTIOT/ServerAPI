@@ -6,11 +6,12 @@ import DeviceDispatch from './pages/device-dispatch/deviceDispatch';
 import './App.css';
 import 'semantic-ui-css/semantic.min.css'
 import ManageDeivce from './pages/manage-device/manageDevice';
+import { Loader } from 'semantic-ui-react'
 
 function App() {
   return (
     <div className="App">
-      <Suspense fallback={<div>Loading....</div>}>
+      <Suspense fallback={<Loader active inline='centered' size='large' />}>
       <Switch>
         <Route exact path='/qrcode-scanner/' component={QRCodeReader} />
         <Route exact path='/resetPassword/:userId/:token' component={ResetPassword} />
