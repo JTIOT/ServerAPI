@@ -1,11 +1,12 @@
 import React from 'react';
 import faker from 'faker';
 import {Segment, Header, Button, Popup, Divider} from 'semantic-ui-react';
-import Item from '../../components/Item/Item';
+import ItemList, {IItem} from '../../components/itemList/itemList';
 import DropdownList, {DropdownOption, DropdownMetadata} from '../../components/dropdownList/dropdownList';
 import GroupList from '../../components/groupList/groupList';
 import CSVReaderButton from '../../components/csvReaderButton/csvReaderButton';
 import CSVDownloadButton from '../../components/csvDownloadButton/csvDownloadButton';
+import {stripMAC} from '../../utils/utils';
 
 import classes from './deviceDispatch.module.scss';
 
@@ -87,7 +88,7 @@ interface IData{
 }
 
 interface IState{
-    items: any[],
+    items: IItem[],
     data: IData,
     csvData: null|any[][],
     scanning: boolean,
@@ -137,7 +138,7 @@ class DeviceDispatch extends React.Component<{}, IState> {
 
 
     state = {
-        items: [],
+        items: Array<IItem>(),
         data: initData,
         csvData: null,
         toggle: false,
@@ -155,9 +156,9 @@ class DeviceDispatch extends React.Component<{}, IState> {
             const {items} = this.state;
 
             console.log(this.state.items);
-            const qrcode = this.stripMAC(this.qrcodeInputKey);
+            const qrcode = stripMAC(this.qrcodeInputKey);
             
-            const found = items.find((i: { value: any; })=>{
+            const found = items.find((i: IItem)=>{
                 return i.value === qrcode;
             })
     
@@ -166,7 +167,7 @@ class DeviceDispatch extends React.Component<{}, IState> {
                 return;
             }
     
-            const key = items.length;
+            const key = items.length.toString();
             let newItems: any[] = [...items];
             newItems.unshift({
                 key:key, 
@@ -196,23 +197,6 @@ class DeviceDispatch extends React.Component<{}, IState> {
         return (inData.model && inData.type && inData.company && inData.recipient) !== null;
     }
     
-    stripMAC = (qrcodeURL:string)=>{
-
-        const tightCode = qrcodeURL.split('/').pop();
-        let qrcode = '';
-        if(tightCode){
-            for(let i=0; i<tightCode.length; i+=2){
-                const partial = tightCode.substr(i, 2);
-                if(i===0){
-                    qrcode += partial;
-                }
-                else{
-                    qrcode += ':'+ partial;
-                }
-            }
-        }
-        return qrcode;
-    }
 
     handleValueChange = (category:string, value:any, dropdownOptions:DropdownOption[])=>{
         const {data} = this.state;
@@ -263,7 +247,7 @@ class DeviceDispatch extends React.Component<{}, IState> {
 
         const transformedData = inData.map((e:any, i:number)=>{
             return {
-                key:i,
+                key:i.toString(),
                 text:e[0],
                 value:e[0]
             }
@@ -289,112 +273,85 @@ class DeviceDispatch extends React.Component<{}, IState> {
         this.setState({...this.state, items:[...items]})
     }
 
-    renderItems = () => {
-        const {items} = this.state;
-
-        return items.map((item:any, index:number)=>{
-            return <Item 
-            key={index} 
-            dataIndex={index} 
-            title={item.text} 
-            onDelete={this.handleItemDelete} 
-            labelTitle={`${index+1}`}
-            labelPosition='left'
-            labelPointer='right'
-            />
-        });
+    renderDropdownMenu = () => {
+        return (
+            <GroupList
+            className={classes.selection}
+            header='Management'
+            subheader='Manage your delivery'
+            headerIcon='cog'
+            headerAlign='left'
+            >
+                <DropdownList 
+                dropdownData={dropdownData}
+                onShowText={this.handleShowText}
+                onShowError={this.handleShowError}
+                onValueChange={this.handleValueChange}
+                />
+            </GroupList>
+        )
     }
 
-    render(){
-        const {data, items, csvData, scanning} = this.state;
+    renderOptions = () =>{
+
+        return(
+            <Segment placeholder>
+                <div>
+                    <Header color='red' content='Import CSV file' />
+                    <CSVReaderButton 
+                    title='Import csv'
+                    onReadCSV={this.handleImportCSV}
+                    onError={this.handleImportCSVError}
+                    />
+                </div>
+                <div>
+                    <Divider horizontal>OR</Divider>
+                </div>
+                <div>
+                    <Header color='red' content='Scan device with QRCode scanner' />
+                    <Button 
+                    content='Start scanning' 
+                    onClick={this.handleStartScanning} 
+                    />
+                </div>
+            </Segment>
+        )
+    }
+
+    renderClearAllBtn = ()=>{
 
         return (
-            <div className={classes.overlay}>
-                <Header 
-                icon='exchange' 
-                color='purple'
-                content='Dispatch management' 
-                subheader='Manage your dispatch' 
-                size='large'
-                />
-                <div className={classes.content}>
-                    {
-                        //dropdown menu
-                    }
-                    <GroupList
-                    className={classes.selection}
-                    header='Management'
-                    subheader='Manage your delivery'
-                    headerIcon='cog'
-                    headerAlign='left'
-                    >
-                        <DropdownList 
-                        dropdownData={dropdownData}
-                        onShowText={this.handleShowText}
-                        onShowError={this.handleShowError}
-                        onValueChange={this.handleValueChange}
-                        />
-                    </GroupList>
-                    {
-                        //scanned device list
-                    }
-                    {
-                    data === null || !this.validateData(data)?
-                    null
-                    :
-                    <GroupList
-                    className={classes.deviceList}
-                    header='Devices'
-                    subheader='Scanned devices'
-                    headerIcon='tablet'
-                    headerAlign='left'
-                    headerColor='purple'
-                    >
-                        {//clear all button
-                            items && items.length>0?
-                            <Button
-                                className={classes.clearBtn} 
-                                icon='delete'
-                                color='red' 
-                                content='Clear all'
-                                onClick={this.handleClearAll}
-                                />
-                            :
-                            null
-                        }
-                        {//list of device or import from scv
-                            items!==null && items.length>0 || scanning?
-                            <div className={classes.itemGroup}>
-                                {
-                                this.renderItems()
-                                }
-                            </div>
-                            :
-                            <Segment placeholder>
-                                <div>
-                                    <Header color='red' content='Import CSV file' />
-                                    <CSVReaderButton 
-                                    title='Import csv'
-                                    onReadCSV={this.handleImportCSV}
-                                    onError={this.handleImportCSVError}
-                                    />
-                                </div>
-                                <div>
-                                    <Divider horizontal>OR</Divider>
-                                </div>
-                                <div>
-                                    <Header color='red' content='Scan device with QRCode scanner' />
-                                    <Button 
-                                    content='Start scanning' 
-                                    onClick={this.handleStartScanning} 
-                                    />
-                                </div>
-                            </Segment>
-                        }
-                    </GroupList>
-                    }
-                </div> 
+            <Button
+                className={classes.clearBtn} 
+                icon='delete'
+                color='red' 
+                content='Clear all'
+                onClick={this.handleClearAll}
+            />
+        )
+    }
+
+    renderDeviceList = () =>{
+
+        const {items} = this.state;
+
+        return (
+            <div className={classes.itemGroup}>
                 {
+                <ItemList 
+                items={items}
+                onItemDelete={this.handleItemDelete}
+                />
+                }
+            </div>
+        )
+    }
+
+    renderOutput = () => {
+
+        const {items, csvData} = this.state;
+
+        return(
                 items.length === 0?
                 null
                 :
@@ -410,6 +367,59 @@ class DeviceDispatch extends React.Component<{}, IState> {
                     outputFilename='DeviceMAC.csv'
                     />
                 </div>    
+        )
+    }
+
+    render(){
+        const {data, items, scanning} = this.state;
+
+        return (
+            <div className={classes.overlay}>
+                <Header 
+                icon='exchange' 
+                color='purple'
+                content='Dispatch management' 
+                subheader='Manage your dispatch' 
+                size='large'
+                />
+                <div className={classes.content}>
+                    {
+                        //dropdown menu
+                        this.renderDropdownMenu()
+                    }
+                    
+                    {
+                        //scanned device list
+                    }
+                    {
+                    data === null || !this.validateData(data)?
+                    null
+                    :
+                    <GroupList
+                    className={classes.deviceList}
+                    header='Devices'
+                    subheader='Scanned devices'
+                    headerIcon='tablet'
+                    headerAlign='left'
+                    headerColor='purple'
+                    >
+                    {//clear all button
+                        items && items.length>0?
+                        this.renderClearAllBtn()
+                        :
+                        null
+                    }
+                    {//list of device or import from scv
+                        items!==null && items.length>0 || scanning?
+                        this.renderDeviceList()
+                        :
+                        this.renderOptions()
+                    }
+                    </GroupList>
+                    }
+                </div> 
+                {
+                    this.renderOutput()
                 }
             </div>
         );
