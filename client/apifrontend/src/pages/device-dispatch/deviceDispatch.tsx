@@ -7,6 +7,7 @@ import GroupList from '../../components/groupList/groupList';
 import CSVReaderButton from '../../components/csvReaderButton/csvReaderButton';
 import CSVDownloadButton from '../../components/csvDownloadButton/csvDownloadButton';
 import {stripMAC} from '../../utils/utils';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 import classes from './deviceDispatch.module.scss';
 
@@ -94,6 +95,8 @@ interface IState{
     scanning: boolean,
 }
 
+interface IProps extends WithTranslation{}
+
 //initial data for user selected data
 const initData:IData = {
     model:null,
@@ -134,7 +137,7 @@ const dropdownData:DropdownMetadata[] = [
 
 
 
-class DeviceDispatch extends React.Component<{}, IState> {
+class DeviceDispatch extends React.Component<IProps, IState> {
 
 
     state = {
@@ -274,10 +277,11 @@ class DeviceDispatch extends React.Component<{}, IState> {
     }
 
     renderDropdownMenu = () => {
+        const {t} = this.props;
         return (
             <GroupList
             className={classes.selection}
-            header='Management'
+            header={t('DeviceDispatch.Management')}
             subheader='Manage your delivery'
             headerIcon='cog'
             headerAlign='left'
@@ -426,4 +430,4 @@ class DeviceDispatch extends React.Component<{}, IState> {
     }
 }
 
-export default DeviceDispatch;
+export default withTranslation()(DeviceDispatch);
