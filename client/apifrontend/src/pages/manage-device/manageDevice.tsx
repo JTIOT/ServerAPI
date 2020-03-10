@@ -309,16 +309,7 @@ const ManageDeivce = ()=>{
                  renderRecords(records)
              }
              </div>
-             {/*
-                (!date)?
-                null
-                :
-                <Button 
-                primary 
-                content='Search' 
-                />
-                */
-            }
+             
         </div>
     );
 }
