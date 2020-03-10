@@ -68,20 +68,20 @@ const recipientOptions = () => {
 
 }
 
-const getDevices = () => {
+// const getDevices = () => {
 
-    let items = [];
-    for(let i=0; i<4; i++){
-        const item = faker.finance.mask(10);
-        items.push({
-            key:i,
-            text:item,
-            value:item
-        })
-    }
-    return items;
+//     let items = [];
+//     for(let i=0; i<4; i++){
+//         const item = faker.finance.mask(10);
+//         items.push({
+//             key:i,
+//             text:item,
+//             value:item
+//         })
+//     }
+//     return items;
 
-}
+// }
 
 interface IData{
     [key:string]:any|null
@@ -410,7 +410,7 @@ class DeviceDispatch extends React.Component<{}, IState> {
                         null
                     }
                     {//list of device or import from scv
-                        items!==null && items.length>0 || scanning?
+                        (items!==null && items.length>0) || scanning?
                         this.renderDeviceList()
                         :
                         this.renderOptions()

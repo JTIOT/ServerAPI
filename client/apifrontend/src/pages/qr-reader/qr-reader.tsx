@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import QrReader from 'react-qr-reader';
-import classes from './qr-reader.module.scss';
+// import classes from './qr-reader.module.scss';
 
 const QRCodeReader = () => {
 

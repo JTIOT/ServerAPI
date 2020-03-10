@@ -2,7 +2,7 @@ import React,{createRef} from 'react';
 import {Button} from 'semantic-ui-react';
 import { CSVReader } from 'react-papaparse'
 
-import classes from './csvReaderButton.module.scss';
+// import classes from './csvReaderButton.module.scss';
 
 interface Props{
     title: string,

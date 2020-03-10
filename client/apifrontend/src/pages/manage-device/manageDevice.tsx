@@ -214,7 +214,6 @@ const ManageDeivce = ()=>{
     const [searching, setSearching] = useState(false);
 
     useEffect(()=>{
-        if(!data.model || !data.type || !data.operator) return;
 
         const dateComp = date.split(' - ');
         if((dateComp.length !== 2 || !dateComp[1])) return;

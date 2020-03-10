@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import {Dropdown, Segment, Grid} from 'semantic-ui-react';
+import React from 'react';
+import {Dropdown, Segment} from 'semantic-ui-react';
 import {DropdownProps} from 'semantic-ui-react';
 
 /**
