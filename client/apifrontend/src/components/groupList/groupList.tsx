@@ -15,7 +15,6 @@ interface Props{
 
 /**
  * GroupList component display a title and render it's children
- * @param props 
  */
 const GroupList: React.FC<Props> = (props)=>{
     const {

@@ -43,6 +43,11 @@ const renderRecord = (records:Array<Array<string>> | undefined)=>{
     })
 }
 
+/**
+ * Present data in a table format
+ * @param {number} stickToHeader At which row and before are fixed
+ * @param {number} stickToColumn At which column and before are fixed
+ */
 const Datatable = <T extends Props>({
     headers, 
     records,

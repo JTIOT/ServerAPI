@@ -9,9 +9,9 @@ interface Props{
 }
 
 /**
- * Render CSV download button
+ * CSV file download button
  * 
- * Render nothing if csv data is null
+ * Handle generating CSV file 
  */
 const CSVDownloadButton = <T extends Props>({
     title='Download CSV File',

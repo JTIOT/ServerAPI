@@ -10,6 +10,10 @@ interface Props{
     onError: (err:any)=>void
 }
 
+/**
+ * CSV file import button
+ * Handle CSV file processing
+ */
 const CSVReaderButton = <T extends Props>({title, onReadCSV, onError}:T) =>{
     
     let ref = createRef<HTMLElement>();
