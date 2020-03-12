@@ -17,8 +17,11 @@ interface Props{
 }
 
 /**
+ * Item with label and show menu popup with delete button when hover
  * 
- * Render Item with label and show popup when hover
+ * Label has position and pointer for left or right
+ * 
+ * popup trigger can be hover, cick, focus or mixed
  */
 const Item: React.FC<Props> = ({
     title, 

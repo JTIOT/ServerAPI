@@ -2,6 +2,9 @@ import React, {useState} from 'react';
 import QrReader from 'react-qr-reader';
 // import classes from './qr-reader.module.scss';
 
+/**
+ * This component is only for testing purpose
+ */
 const QRCodeReader = () => {
 
     const [qrcodeList, setQrcodeList] = useState<string[]>([]);

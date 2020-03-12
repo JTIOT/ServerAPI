@@ -9,6 +9,9 @@ interface Props {
     onValueChanged?: (value:string)=>void
 }
 
+/**
+ * Input field with placeholder and icon on right
+ */
 const InputField: React.FC<Props> = ({
     icon='search', 
     placeholder='Search...', 
@@ -29,7 +32,7 @@ const InputField: React.FC<Props> = ({
 
     return (
         <Input 
-        icon='search'
+        icon={icon}
         placeholder={placeholder}
         onChange={onValueChange} 
         />

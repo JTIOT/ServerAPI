@@ -9,6 +9,10 @@ interface Props{
     match: match<{userId:string, token:string}>
 }
 
+/**
+ * This component is currently not in use 
+ *
+ */
 const ResetPassword: React.FC<Props> = ({match})=>{
     const {userId, token} = match.params;
     const [resetSuccess, setResetSuccess] = useState(false);

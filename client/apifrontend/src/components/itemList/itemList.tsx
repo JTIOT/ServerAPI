@@ -14,6 +14,9 @@ interface Props{
     labelPointer?: "left" | "right" | undefined
 }
 
+/**
+ * Item list is a component and used to group each Item component
+ */
 const ItemList = <P extends Props>({
     items,
     onItemDelete,

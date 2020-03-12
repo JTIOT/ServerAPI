@@ -1,6 +1,6 @@
 {
     "Common":{
-
+        "PageNotFound": "找不到網頁"
     },
     "DeviceDispatch":{
         "Title": "出庫管裡",

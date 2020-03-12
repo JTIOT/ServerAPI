@@ -134,9 +134,16 @@ const dropdownData:DropdownMetadata[] = [
 ]
 
 
-
-
-
+/**
+ * DeivceDispatch component is a page that allow user to
+ * manage deivce dispatch either receive or deliver
+ * 
+ * Feature:
+ * - qrcode scan from qrcode scanner device
+ * - import csv file that contain device MAC address
+ * - export csv file that contain all device MAC address which is scanned
+ * - allow to pick company which user want to deliver to
+ */
 class DeviceDispatch extends React.Component<IProps, IState> {
 
 

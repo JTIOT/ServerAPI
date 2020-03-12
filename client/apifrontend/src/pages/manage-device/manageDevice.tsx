@@ -205,6 +205,14 @@ const allRecords = getRecords();
 
 const subject = new Subject<string>();
 
+/**
+ * ManageDevice component is a page that allow user to manage all devices
+ * 
+ * Feature:
+ * - allow user to search all devices by date range
+ * - allow user to filter search result by keyword
+ * - display device data in data table format
+ */
 const ManageDeivce = ()=>{
 
     const [data, setData] = useState(initData);
