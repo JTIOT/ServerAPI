@@ -23,7 +23,7 @@
     "concurrently": "^5.0.2",
     "cors": "^2.8.5",
     "email-templates": "^6.1.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-async-handler": "^1.1.4",
     "ip": "^1.1.5",
     "jsend-express": "^1.2.3",
